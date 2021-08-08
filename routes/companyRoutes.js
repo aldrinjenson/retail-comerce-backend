@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
   res.send(await CompanyController.getCompany(query));
 });
 
-router.post("/add", async (req, res) => {
+router.post("/", async (req, res) => {
   const { company } = req.body;
   res.send(await CompanyController.addCompany(company));
 });
