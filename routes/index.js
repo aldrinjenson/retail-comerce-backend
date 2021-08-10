@@ -9,6 +9,6 @@ router.get("/", (req, res) => {
 });
 
 router.use("/company", companyRouter);
-router.use("/products", productRouter);
+router.use("/product", productRouter);
 
 module.exports.indexRouter = router;
