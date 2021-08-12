@@ -17,13 +17,14 @@ app.use(express.json());
 app.use(morgan("dev")); //for getting request logs
 
 mongoose
-  .connect(process.env.DB_URL, {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
   })
   .then(() => console.log("Connected to db"))
   .catch((err) => console.log("error in connecting to db" + err));
+app.use(express.json());
 
 app.use(indexRouter);
 const PORT = process.env.PORT || 5000;

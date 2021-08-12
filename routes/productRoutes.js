@@ -3,12 +3,8 @@ const { ProductController } = require("../controllers");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const { query } = req;
+  const { query } = req.body;
   res.send(await ProductController.getProducts(query));
-});
-router.get("/search", async (req, res) => {
-  const { query } = req;
-  res.send(await ProductController.searchProducts(query));
 });
 
 router.post("/", async (req, res) => {
