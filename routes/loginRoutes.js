@@ -17,7 +17,7 @@ const { Company } = require("../model/Company");
         
         const validPassword = await bcrypt.compare(req.body.password, companyUser.password);
         if (!validPassword) return res.status(400).send("invalid password");// check the passfor the username
-        const token = jwt.sign({username: companyUser.username},process.env.TOKEN_SECRET);
+        const token = jwt.sign({_id: companyUser._id},process.env.TOKEN_SECRET);
         res.header('auth-token',token).send(token); // append token as the value for auth-token key in the header
 
         
