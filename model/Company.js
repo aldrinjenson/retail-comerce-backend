@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 const CompanySchema = new Schema(
-  { 
+  {
     username: {
       type: String,
       required: true,
@@ -16,7 +16,7 @@ const CompanySchema = new Schema(
     },
     email: {
       type: String,
-      
+      required: false,
     },
     phoneNo: {
       type: String,
@@ -39,15 +39,15 @@ const CompanySchema = new Schema(
       required: true,
     },
     upi: {
-      type: String, 
+      type: String,
     },
     password: {
-      type:String,
+      type: String,
       required: true,
     },
     description: {
       type: String,
-      
+      required: false,
     },
   },
   { timestamps: true }
