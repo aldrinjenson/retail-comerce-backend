@@ -1,4 +1,5 @@
 const { Company } = require("../model");
+const { escapeRegex } = require("../utils/misc");
 
 const addCompany = async (company) => {
   const { email } = company;
@@ -18,11 +19,13 @@ const addCompany = async (company) => {
   }
 };
 
-const getCompany = async (query) => {
+const getCompany = async (searchTerm) => {
+  let query = {};
+  if (searchTerm) {
+    query = { name: new RegExp(escapeRegex(searchTerm), "gi") };
+  }
   try {
-    const companies = await Company.find(query || {})
-      .lean()
-      .exec();
+    const companies = await Company.find(query).lean().exec();
     return { data: companies, err: null };
   } catch (error) {
     return { err: error };
