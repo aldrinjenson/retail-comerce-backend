@@ -29,6 +29,7 @@ const searchProducts = async (query) => {
       $or: [
         { name: { $regex: searchTerm, $options: "i" } },
         { type: { $regex: searchTerm, $options: "i" } },
+        { brand: { $regex: searchTerm, $options: "i" } },
       ],
     })
       .lean()
