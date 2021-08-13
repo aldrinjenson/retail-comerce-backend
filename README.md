@@ -16,7 +16,7 @@ POST:
 - /products: get list of all added products
   - params: productItems[] (required):add list of productItems to db
 - /register : register user
-  - req.body: username, name(comapany name), phoneNo, locality, pinCode, district, state, password 
+  - req.body: username, name(comapany name), phoneNo, locality, pinCode, district, state, password
 - /login : login user
   - req.body: username, password
 

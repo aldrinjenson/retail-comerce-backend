@@ -3,7 +3,8 @@ const router = express.Router();
 const { CompanyController } = require("../controllers");
 
 router.get("/", async (req, res) => {
-  const { query } = req.body;
+  const { query } = req;
+  console.log(query);
   res.send(await CompanyController.getCompany(query));
 });
 

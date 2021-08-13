@@ -1,4 +1,11 @@
-const { CompanyController } = require("./CompanyController");
-const { ProductController } = require("./ProductController");
+const { CompanyController } = require("./companyController");
+const { CustomerController } = require("./customerController");
+const { OrderController } = require("./orderController");
+const { ProductController } = require("./productController");
 
-module.exports = { ProductController, CompanyController };
+module.exports = {
+  ProductController,
+  CompanyController,
+  CustomerController,
+  OrderController,
+};
