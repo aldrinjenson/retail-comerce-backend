@@ -18,6 +18,17 @@ const addCompany = async (company) => {
   }
 };
 
+const updateCompany = async(company) => {
+  try {
+    const { username } = company;
+    const res = await Company.findOneAndUpdate({username}, company,  {new : true, useFindAndModify : false}).exec();
+    return res;
+  } catch(e) {
+    console.log("error in updating:  " + e);
+    return { msg: "error: " + e, err: 9 };
+  }
+}
+
 const getCompany = async (query) => {
   try {
     const companies = await Company.find(query || {})
@@ -29,4 +40,4 @@ const getCompany = async (query) => {
   }
 };
 
-module.exports.CompanyController = { addCompany, getCompany };
+module.exports.CompanyController = { addCompany, getCompany, updateCompany };
