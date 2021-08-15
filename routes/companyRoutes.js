@@ -12,4 +12,9 @@ router.post("/", async (req, res) => {
   res.send(await CompanyController.addCompany(company));
 });
 
+router.patch("/", async (req, res) => {
+  const { company } = req.body;
+  res.send(await CompanyController.updateCompany(company));
+});
+
 module.exports.companyRouter = router;
