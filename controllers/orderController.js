@@ -1,7 +1,6 @@
-const { ProductItem, Order } = require("../model");
+const { Order } = require("../model");
 
 const addOrder = async (order) => {
-  console.log(order);
   try {
     const newOrder = new Order({ ...order, status: "pending" });
     const savedOrder = await newOrder.save();
@@ -15,12 +14,14 @@ const addOrder = async (order) => {
 
 const getOrders = async (query) => {
   try {
-    const products = await ProductItem.find(query || {})
+    const orders = await Order.find(query || {})
       .lean()
       .exec();
-    return { data: products, err: null };
+    const opts = ["product", "customer", "company"];
+    const mainOrders = await Order.populate(orders, opts);
+    return { data: mainOrders, err: null };
   } catch (error) {
-    console.log("error in getting products" + error);
+    console.log("error in getting orders" + error);
     return { err: error };
   }
 };

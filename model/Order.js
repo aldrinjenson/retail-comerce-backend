@@ -6,20 +6,20 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
-    customerId: {
+    customer: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "customer",
+      ref: "Customer",
     },
-    productId: {
+    product: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "product",
+      ref: "ProductItem",
     },
-    companyId: {
+    company: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,
-      ref: "company",
+      ref: "Company",
     },
     status: {
       type: String,
