@@ -8,9 +8,8 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { query } = req;
-  console.log(query);
-  res.send(await CustomerController.addCustomer(query));
+  const { body: customer } = req;
+  res.send(await CustomerController.addCustomer(customer));
 });
 
 module.exports.customerRouter = router;

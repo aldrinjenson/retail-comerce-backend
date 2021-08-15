@@ -4,7 +4,6 @@ const { CompanyController } = require("../controllers");
 
 router.get("/", async (req, res) => {
   const { query } = req;
-  console.log(query);
   res.send(await CompanyController.getCompany(query));
 });
 
@@ -15,7 +14,7 @@ router.post("/", async (req, res) => {
 
 router.patch("/", async (req, res) => {
   const { company } = req.body;
-  res.send(await CompanyController.updateCompany(company))
-})
+  res.send(await CompanyController.updateCompany(company));
+});
 
 module.exports.companyRouter = router;
