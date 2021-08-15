@@ -12,6 +12,7 @@ const addProducts = async (products = []) => {
 };
 
 const getProducts = async (query) => {
+  // query is optional
   try {
     const products = await ProductItem.find(query || {})
       .lean()

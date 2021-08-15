@@ -4,7 +4,6 @@ const { CompanyController } = require("../controllers");
 
 router.get("/", async (req, res) => {
   const { query } = req;
-  console.log(query);
   res.send(await CompanyController.getCompany(query));
 });
 
