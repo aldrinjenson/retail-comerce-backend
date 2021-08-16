@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 const { default: axios } = require("axios");
 const { Order } = require("../model");
 
@@ -43,10 +44,10 @@ const updateStatus = async (params) => {
     console.log("Status updated");
     const botUrl = `${process.env.BOT_BASE_URL}/notify`;
     console.log(botUrl);
-    axios.post(botUrl, {
-      payload: newOrder,
-      type: "STATUS_UPDATE",
-    });
+    // axios.post(botUrl, {
+    //   payload: newOrder,
+    // type: "STATUS_UPDATE",
+    // });
     return { data: newOrder, err: null };
   } catch (error) {
     console.log("error in getting orders" + error);
