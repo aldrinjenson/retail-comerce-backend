@@ -4,7 +4,7 @@ const verifyAuth = require("./verify/verifyauth");
 
 router.get("/", verifyAuth, (req, res) => {
   // we got req.user from middleware by appending the username to request
-  res.send(req.user);
+  res.send(req.user._id);
 });
 
 module.exports.dashboard = router;
