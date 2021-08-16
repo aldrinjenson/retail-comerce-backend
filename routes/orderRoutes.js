@@ -12,4 +12,9 @@ router.post("/", async (req, res) => {
   res.send(await OrderController.addOrder(order));
 });
 
+router.patch("/status", async (req, res) => {
+  const { body } = req;
+  res.send(await OrderController.updateStatus(body));
+});
+
 module.exports.orderRouter = router;
