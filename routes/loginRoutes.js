@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
 
   const companyUser = await Company.findOne({ username: req.body.username });
   if (!companyUser) {
-    return res.status(400).send("username does not exist");
+    return res.status(400).send({"success":false});
   }
 
   const validPassword = await bcrypt.compare(
@@ -17,8 +17,13 @@ router.post("/", async (req, res) => {
     companyUser.password
   );
   if (!validPassword) return res.status(400).send("invalid password"); // check the passfor the username
-  const token = jwt.sign({ _id: companyUser._id }, process.env.TOKEN_SECRET);
-  res.header("auth-token", token).send(token); // append token as the value for auth-token key in the header
+
+  const token = jwt.sign(
+    { username: companyUser.username },
+    process.env.TOKEN_SECRET
+  );
+  res.send({"success":true, "username" :companyUser.username, "token":token, "id":companyUser._id}); // append token as the value for auth-token key in the header
+
 });
 
 module.exports.loginRouter = router;
