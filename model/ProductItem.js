@@ -22,7 +22,7 @@ const ProductItemSchema = new Schema(
       type: String,
       required: true,
     },
-    discountedPrice:{
+    discountedPrice: {
       type: String,
       required: false,
     },

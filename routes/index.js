@@ -7,7 +7,7 @@ const { loginRouter } = require("./loginRoutes");
 const { dashboard } = require("./dashboard");
 const { customerRouter } = require("./customerRoutes");
 const { orderRouter } = require("./orderRoutes");
-const { uploadRoute } = require("./uploadItemRoute");
+
 
 // todo: add req body validation using 'joi' library
 router.get("/", (req, res) => {
@@ -21,6 +21,6 @@ router.use("/order", orderRouter);
 router.use("/register", registerRouter);
 router.use("/login", loginRouter);
 router.use("/dashboard", dashboard);
-router.use("/upload", uploadRoute);
+
 
 module.exports.indexRouter = router;

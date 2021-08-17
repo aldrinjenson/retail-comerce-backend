@@ -13,8 +13,8 @@ router.get("/search", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  const { query } = req;
-  res.send(await ProductController.addProducts(query));
+  
+  res.send(await ProductController.addProducts(req));
 });
 
 module.exports.productRouter = router;
