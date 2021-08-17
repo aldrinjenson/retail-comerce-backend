@@ -8,6 +8,7 @@ const { dashboard } = require("./dashboard");
 const { customerRouter } = require("./customerRoutes");
 const { orderRouter } = require("./orderRoutes");
 
+
 // todo: add req body validation using 'joi' library
 router.get("/", (req, res) => {
   res.send("Server active\nCurrent Time: " + new Date());
@@ -20,5 +21,6 @@ router.use("/order", orderRouter);
 router.use("/register", registerRouter);
 router.use("/login", loginRouter);
 router.use("/dashboard", dashboard);
+
 
 module.exports.indexRouter = router;
