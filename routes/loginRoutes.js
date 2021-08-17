@@ -17,11 +17,13 @@ router.post("/", async (req, res) => {
     companyUser.password
   );
   if (!validPassword) return res.status(400).send("invalid password"); // check the passfor the username
+
   const token = jwt.sign(
     { username: companyUser.username },
     process.env.TOKEN_SECRET
   );
   res.send({"success":true, "username" :companyUser.username, "token":token, "id":companyUser._id}); // append token as the value for auth-token key in the header
+
 });
 
 module.exports.loginRouter = router;
