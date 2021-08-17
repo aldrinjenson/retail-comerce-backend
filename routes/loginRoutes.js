@@ -9,7 +9,7 @@ router.post("/", async (req, res) => {
 
   const companyUser = await Company.findOne({ username: req.body.username });
   if (!companyUser) {
-    return res.status(400).send("username does not exist");
+    return res.status(400).send({"success":false});
   }
 
   const validPassword = await bcrypt.compare(
@@ -21,7 +21,7 @@ router.post("/", async (req, res) => {
     { username: companyUser.username },
     process.env.TOKEN_SECRET
   );
-  res.header("auth-token", token).send(token); // append token as the value for auth-token key in the header
+  res.send({"success":true, "username" :companyUser.username, "token":token, "id":companyUser._id}); // append token as the value for auth-token key in the header
 });
 
 module.exports.loginRouter = router;
