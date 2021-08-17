@@ -26,8 +26,8 @@ router.post("/", async (req, res) => {
     success: true,
     username: companyUser.username,
     token: token,
-    id: companyUser._id,
-  }); // append token as the value for auth-token key in the header
+    _id: companyUser._id,
+  });
 });
 
 module.exports.loginRouter = router;
