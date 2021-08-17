@@ -14,11 +14,15 @@ const CustomerSchema = new Schema(
       type: String,
       required: true,
     },
-    addresss: {
+    address: {
       type: String,
       required: true,
     },
     phoneNumber: {
+      type: String,
+      required: true,
+    },
+    tgFullName: {
       type: String,
       required: true,
     },

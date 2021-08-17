@@ -1,15 +1,20 @@
 const express = require("express");
 const router = express.Router();
-const { CustomerController } = require("../controllers");
+const { OrderController } = require("../controllers");
 
 router.get("/", async (req, res) => {
   const { query } = req;
-  res.send(await CustomerController.getCompany(query));
+  res.send(await OrderController.getOrders(query));
 });
 
 router.post("/", async (req, res) => {
-  const { query } = req;
-  res.send(await CustomerController.addCustomer(query));
+  const { body: order } = req;
+  res.send(await OrderController.addOrder(order));
+});
+
+router.patch("/status", async (req, res) => {
+  const { body } = req;
+  res.send(await OrderController.updateStatus(body));
 });
 
 module.exports.orderRouter = router;

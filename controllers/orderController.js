@@ -1,33 +1,58 @@
-const { ProductItem, Company } = require("../model");
+// eslint-disable-next-line no-unused-vars
+const { default: axios } = require("axios");
+const { Order } = require("../model");
 
-const addCompany = async (company) => {
-  const { email } = company;
-  const savedCompany = await Company.findOne({ email }).exec();
-  if (savedCompany) {
-    console.log("User already saved and present in db");
-    return savedCompany;
-  }
-  const newCompany = new Company(company);
+const addOrder = async (order) => {
   try {
-    const savedCompany = await newCompany.save();
-    console.log("Company saved");
-    return savedCompany;
-  } catch (err) {
-    console.log("error in saving:  " + err);
-    return { msg: "error: " + err, err: 1 };
+    const newOrder = new Order({ ...order, status: "pending" });
+    const savedOrder = await newOrder.save();
+    console.log("new Order saved");
+    return { data: savedOrder, err: 0 };
+  } catch (error) {
+    console.log("Error in saving new order: " + error);
+    return { data: error, err: 1 };
   }
 };
 
-const getCompany = async (query) => {
+const getOrders = async (query) => {
   try {
-    const products = await ProductItem.find(query || {})
+    const orders = await Order.find(query || {})
       .lean()
       .exec();
-    return { data: products, err: null };
+    const opts = ["product", "customer", "company"];
+    const mainOrders = await Order.populate(orders, opts);
+    return { data: mainOrders, err: null };
   } catch (error) {
-    console.log("error in getting products" + error);
+    console.log("error in getting orders" + error);
     return { err: error };
   }
 };
 
-module.exports.OrderController = { addCompany, getCompany };
+const updateStatus = async (params) => {
+  const { _id, status } = params;
+  console.log(params);
+  try {
+    const order = await Order.findOne({ _id })
+      .populate({ path: "customer" })
+      .exec();
+    // if (order.status === status) {
+    //   console.log("same status");
+    //   return { data: "Not updated ", err: null };
+    // }
+    order.status = status;
+    const newOrder = await order.save();
+    console.log("Status updated");
+    const botUrl = `${process.env.BOT_BASE_URL}/notify`;
+    console.log(botUrl);
+    // axios.post(botUrl, {
+    //   payload: newOrder,
+    // type: "STATUS_UPDATE",
+    // });
+    return { data: newOrder, err: null };
+  } catch (error) {
+    console.log("error in getting orders" + error);
+    return { err: error };
+  }
+};
+
+module.exports.OrderController = { addOrder, getOrders, updateStatus };
