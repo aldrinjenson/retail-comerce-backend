@@ -28,7 +28,7 @@ const updateCompany = async (company) => {
     return res;
   } catch (e) {
     console.log("error in updating:  " + e);
-    return { msg: "error: " + e, err: 9 };
+    return { msg: "error in updating " + e, err: e };
   }
 };
 
@@ -39,7 +39,7 @@ const getCompany = async (query) => {
       .exec();
     return { data: companies, err: null };
   } catch (error) {
-    return { err: error };
+    return { msg: "error in getting company", err: error };
   }
 };
 

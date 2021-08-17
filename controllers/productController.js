@@ -4,22 +4,20 @@ const { ProductItem } = require("../model");
 
 const { Company } = require("../model/Company");
 
-
 const addProducts = async (req) => {
-  
   const compId = req.body.companyId;
   const comp = await Company.findOne({ _id: compId });
-  const compName = comp["name"]
+  const compName = comp["name"];
   const urls = req.body.images;
-  
+
   var newvalue = { $set: { hasProducts: true } };
-  Company.updateOne({ _id:compId}, newvalue,function(err) {
+  Company.updateOne({ _id: compId }, newvalue, function (err) {
     if (err) throw err;
     console.log("1 document updated");
   });
 
- // update hasProduct Field to be True in companies collection
-  
+  // update hasProduct Field to be True in companies collection
+
   const product = new ProductItem({
     name: req.body.model,
     brand: req.body.brand,
@@ -34,17 +32,11 @@ const addProducts = async (req) => {
   try {
     const savedItem = await product.save();
     console.log(savedItem);
-    return {msg: "product saved", err: 0};
+    return { msg: "product saved", err: 0 };
   } catch (err) {
-    return {err: err};
+    return { err: err };
   }
 };
-
-
-
-
-
-  
 
 const getProducts = async (query) => {
   // query is optional
