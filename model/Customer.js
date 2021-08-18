@@ -4,7 +4,7 @@ const CustomerSchema = new Schema(
   {
     tgUserName: {
       type: String,
-      required: true,
+      required: false,
     },
     tgUserId: {
       type: Number,
