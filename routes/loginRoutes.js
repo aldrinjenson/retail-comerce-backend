@@ -22,7 +22,6 @@ router.post("/", async (req, res) => {
     { username: companyUser.username },
     process.env.TOKEN_SECRET
   );
-
   res.send({
     success: true,
     username: companyUser.username,
