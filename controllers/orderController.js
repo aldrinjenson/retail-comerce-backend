@@ -6,8 +6,9 @@ const addOrder = async (order) => {
   try {
     const newOrder = new Order({ ...order, status: "pending" });
     const savedOrder = await newOrder.save();
+    const populatedOrder = await Order.populate(savedOrder, "company");
     console.log("new Order saved");
-    return { data: savedOrder, err: 0 };
+    return { data: populatedOrder, err: 0 };
   } catch (error) {
     console.log("Error in saving new order: " + error);
     return { data: error, err: 1 };
@@ -54,10 +55,10 @@ const updateStatus = async (params) => {
     const order = await Order.findOne({ _id })
       .populate(["customer", "product"])
       .exec();
-    // if (order.status === status) {
-    //   console.log("same status");
-    //   return { data: "Same status for order. Not updating ", err: 0 };
-    // }
+    if (order.status === status) {
+      console.log("same status");
+      return { data: "Same status for order. Not updating ", err: 0 };
+    }
     order.status = status;
     const newOrder = await order.save();
     console.log("Status updated");

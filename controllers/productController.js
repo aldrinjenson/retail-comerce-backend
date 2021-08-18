@@ -1,7 +1,6 @@
 // const express = require("express");
 // const router = express.Router();
 const { ProductItem } = require("../model");
-
 const { Company } = require("../model/Company");
 
 const addProducts = async (req) => {
@@ -10,13 +9,6 @@ const addProducts = async (req) => {
     const comp = await Company.findOne({ _id: compId });
     const compName = comp["name"];
     const urls = req.body.images;
-
-    var newvalue = { $set: { hasProducts: true } };
-    Company.updateOne({ _id: compId }, newvalue, function (err) {
-      if (err) throw err;
-    });
-
-    // update hasProduct Field to be True in companies collection
 
     const product = new ProductItem({
       name: req.body.model,
@@ -30,6 +22,11 @@ const addProducts = async (req) => {
       addedCompany: compId,
     });
     await product.save();
+    // update hasProduct Field to be True in companies collection
+    const newvalue = { $set: { hasProducts: true } };
+    Company.updateOne({ _id: compId }, newvalue, function (err) {
+      if (err) throw err;
+    });
     return { msg: "product saved", err: 0 };
   } catch (err) {
     return { err: err };

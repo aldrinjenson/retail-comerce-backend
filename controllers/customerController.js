@@ -6,7 +6,7 @@ const addCustomer = async (customer) => {
     const existingCustomer = await Customer.findOneAndUpdate(
       { tgUserId },
       customer,
-      { new: true }
+      { new: true, useFindAndModify: false }
     ).exec();
     if (existingCustomer) {
       console.log("Customer already exists");
