@@ -24,7 +24,7 @@ const CustomerSchema = new Schema(
     },
     tgFullName: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   { timestamps: true }
