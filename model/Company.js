@@ -44,7 +44,6 @@ const CompanySchema = new Schema(
     password: {
       type: String,
       required: true,
-      select: false,
     },
     description: {
       type: String,

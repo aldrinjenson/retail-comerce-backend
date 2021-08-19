@@ -6,8 +6,9 @@ const { Company } = require("../model/Company");
 
 router.post("/", async (req, res) => {
   // check if username already exist in db
-
+  try{
   const companyUser = await Company.findOne({ username: req.body.username });
+  
   if (!companyUser) {
     return res.status(400).send({ success: false });
   }
@@ -27,7 +28,12 @@ router.post("/", async (req, res) => {
     username: companyUser.username,
     token: token,
     _id: companyUser._id,
-  });
-});
+    });
+  
+  }
+  catch(e) {
+    console.log(e)
+  }
+})
 
 module.exports.loginRouter = router;
