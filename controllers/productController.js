@@ -7,8 +7,6 @@ const addProducts = async (req) => {
   try {
     const compId = req.body.companyId;
     const comp = await Company.findOne({ _id: compId });
-    const compName = comp["name"];
-    const urls = req.body.images;
 
     const product = new ProductItem({
       name: req.body.model,
@@ -17,12 +15,13 @@ const addProducts = async (req) => {
       discountedPrice: req.body.discountedPrice,
       type: req.body.type,
       description: req.body.description,
-      imgUrls: urls,
-      companyName: compName,
+      imgUrls: req.body.images,
+      companyName: comp.name,
+      companyLocation: comp.locality,
       addedCompany: compId,
     });
     await product.save();
-    // update hasProduct Field to be True in companies collection
+    // update hasProduct Field to be True in companies collection when a product is added
     const newvalue = { $set: { hasProducts: true } };
     Company.updateOne({ _id: compId }, newvalue, function (err) {
       if (err) throw err;
