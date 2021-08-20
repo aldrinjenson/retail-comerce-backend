@@ -51,8 +51,8 @@ const CompanySchema = new Schema(
     },
     upiPhoneNumber: {
       type: String,
-      required: false
-    }
+      required: false,
+    },
   },
   { timestamps: true }
 );
