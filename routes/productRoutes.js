@@ -18,5 +18,7 @@ router.post("/", async (req, res) => {
 router.patch("/", async (req, res) => {
   res.send(await ProductController.updateProduct(req));
 });
-
+router.delete("/", async (req, res) => {
+  res.send(await ProductController.deleteProduct(req));
+});
 module.exports.productRouter = router;
