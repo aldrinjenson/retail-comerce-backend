@@ -90,26 +90,25 @@ const updateProduct = async (req) => {
         useFindAndModify: false,
       }
     );
-    if (!res){
+    if (!res) {
       return { err: "cannot update" };
-    } 
+    }
     return { msg: "product saved", err: 0, res: res };
   } catch (err) {
     return { err: err };
   }
 };
 
-const deleteProduct = async(req) => {
-  try{
-    const res = await ProductItem.findOneAndDelete({"_id":req.body.id});
-    if (!res){
-      return { err: "cannot update" };
-    } 
+const deleteProduct = async (req) => {
+  try {
+    const res = await ProductItem.findOneAndDelete({ _id: req.body.id });
+    if (!res) {
+      return { err: "cannot delete" };
+    }
     return { msg: "product deleted", err: 0, res: res };
-  } catch(err){
+  } catch (err) {
     return { err: err };
   }
-
 };
 
 module.exports.ProductController = {
