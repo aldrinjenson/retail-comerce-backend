@@ -15,5 +15,8 @@ router.get("/search", async (req, res) => {
 router.post("/", async (req, res) => {
   res.send(await ProductController.addProducts(req));
 });
+router.patch("/", async (req, res) => {
+  res.send(await ProductController.updateProduct(req));
+});
 
 module.exports.productRouter = router;

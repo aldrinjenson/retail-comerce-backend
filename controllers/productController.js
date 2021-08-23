@@ -65,4 +65,35 @@ const searchProducts = async (query) => {
   }
 };
 
-module.exports.ProductController = { addProducts, getProducts, searchProducts };
+const updateProduct = async (req) => {
+ 
+
+  try{
+    const compId = req.body.companyId;
+    const comp = await Company.findOne({ _id: compId });
+    const compName = comp["name"];
+    const urls = req.body.images;
+    
+    const res = await ProductItem.findOneAndUpdate(  {name:req.body.model, companyName:compName } , {
+      name: req.body.model,
+      brand: req.body.brand,
+      price: req.body.price,
+      discountedPrice: req.body.discountedPrice,
+      type: req.body.type,
+      description: req.body.description,
+      imgUrls: urls,
+      companyName: compName,
+      addedCompany: compId,
+    }, {
+      new: true,
+      useFindAndModify: false,
+    });
+    
+    return { msg: "product saved", err: 0,res: res };
+  } catch(err){
+    return { err: err };
+  }
+
+};
+
+module.exports.ProductController = { addProducts, getProducts, searchProducts, updateProduct };
