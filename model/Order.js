@@ -29,6 +29,18 @@ const OrderSchema = new Schema(
       type: String,
       required: false,
     },
+    orderedBy: {
+      type: String,
+      required: true,
+    },
+    orderedPhoneNo: {
+      type: String,
+      required: true,
+    },
+    orderedAddress: {
+      type: String,
+      required: true,
+    },
   },
   { timestamps: true }
 );
