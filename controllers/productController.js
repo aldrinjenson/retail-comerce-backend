@@ -6,9 +6,9 @@ const { Company } = require("../model/Company");
 const addProducts = async (req) => {
   try {
     const compId = req.body.companyId;
-    console.log(compId)
+    console.log(compId);
     const comp = await Company.findOne({ _id: compId });
-console.log(comp)
+    console.log(comp);
     const product = new ProductItem({
       name: req.body.model,
       brand: req.body.brand,
