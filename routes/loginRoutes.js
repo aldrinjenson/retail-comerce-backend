@@ -16,6 +16,7 @@ router.post("/", async (req, res) => {
     req.body.password,
     companyUser.password
   );
+
   if (!validPassword) return res.status(400).send("invalid password"); // check the passfor the username
 
   const token = jwt.sign(
