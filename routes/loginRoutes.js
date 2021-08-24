@@ -13,12 +13,12 @@ router.post("/", async (req, res) => {
       return res.status(400).send({ success: false });
     }
 
-  const validPassword = await bcrypt.compare(
-    req.body.password,
-    companyUser.password
-  );
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      companyUser.password
+    );
 
-  if (!validPassword) return res.status(400).send("invalid password"); // check the passfor the username
+    if (!validPassword) return res.status(400).send("invalid password"); // check the passfor the username
 
     const token = jwt.sign(
       { username: companyUser.username },
