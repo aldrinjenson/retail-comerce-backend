@@ -6,34 +6,32 @@ const { Company } = require("../model/Company");
 
 router.post("/", async (req, res) => {
   // check if username already exist in db
-  try{
-  const companyUser = await Company.findOne({ username: req.body.username });
-  
-  if (!companyUser) {
-    return res.status(400).send({ success: false });
-  }
+  try {
+    const companyUser = await Company.findOne({ username: req.body.username });
 
-  const validPassword = await bcrypt.compare(
-    req.body.password,
-    companyUser.password
-  );
-  if (!validPassword) return res.status(400).send("invalid password"); // check the passfor the username
+    if (!companyUser) {
+      return res.status(400).send({ success: false });
+    }
 
-  const token = jwt.sign(
-    { username: companyUser.username },
-    process.env.TOKEN_SECRET
-  );
-  res.send({
-    success: true,
-    username: companyUser.username,
-    token: token,
-    _id: companyUser._id,
+    const validPassword = await bcrypt.compare(
+      req.body.password,
+      companyUser.password
+    );
+    if (!validPassword) return res.status(400).send("invalid password"); // check the passfor the username
+
+    const token = jwt.sign(
+      { username: companyUser.username },
+      process.env.TOKEN_SECRET
+    );
+    res.send({
+      success: true,
+      username: companyUser.username,
+      token: token,
+      _id: companyUser._id,
     });
-  
+  } catch (e) {
+    console.log(e);
   }
-  catch(e) {
-    console.log(e)
-  }
-})
+});
 
 module.exports.loginRouter = router;
