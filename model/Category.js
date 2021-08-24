@@ -7,15 +7,15 @@ const CategorySchema = new Schema(
       required: true,
     },
     company: {
-        type: mongoose.Schema.Types.ObjectId,
-        required: true
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
     },
-    products: [ 
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "ProductItem"
-        }
-    ]    
+    products: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "ProductItem",
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -6,7 +6,7 @@ const { Company } = require("../model/Company");
 
 const addProducts = async (req) => {
   try {
-    const compId = req.body.companyId; 
+    const compId = req.body.companyId;
     const comp = await Company.findOne({ _id: compId });
     const product = new ProductItem({
       name: req.body.model,
@@ -21,7 +21,10 @@ const addProducts = async (req) => {
       addedCompany: compId,
     });
     const p = await product.save();
-    await Category.findOneAndUpdate({'company':compId, 'name':req.body.type}, {$push:{'products':p._id}})
+    await Category.findOneAndUpdate(
+      { company: compId, name: req.body.type },
+      { $push: { products: p._id } }
+    );
 
     // update hasProduct Field to be True in companies collection when a product is added
     const newvalue = { $set: { hasProducts: true } };
@@ -92,11 +95,11 @@ const updateProduct = async (req) => {
       }
     );
     if (!res) {
-      return { 'success':false, err: "cannot update" };
+      return { success: false, err: "cannot update" };
     }
-    return { 'success':true, 'message': "product saved", 'res': res };
+    return { success: true, message: "product saved", res: res };
   } catch (err) {
-    return { 'success':false, 'error': err };
+    return { success: false, error: err };
   }
 };
 
@@ -104,20 +107,23 @@ const deleteProduct = async (req) => {
   try {
     const res = await ProductItem.findOneAndDelete({ _id: req.body.id });
     if (!res) {
-      return {'success':false, err: "cannot delete" };
+      return { success: false, err: "cannot delete" };
     }
-    const cat = await Category.findOne({'company':req.body.company, 'name':req.body.type})
-    console.log("hi")
-    cat.products = cat.products.filter(el=> {
+    const cat = await Category.findOne({
+      company: req.body.company,
+      name: req.body.type,
+    });
+    console.log("hi");
+    cat.products = cat.products.filter((el) => {
       return el._id != req.body.id;
-    })
-    console.log("hey")
-    await cat.save()
-    console.log("hello")
-    return {'success':true, msg: "product deleted", err: 0, res: res };
+    });
+    console.log("hey");
+    await cat.save();
+    console.log("hello");
+    return { success: true, msg: "product deleted", err: 0, res: res };
   } catch (err) {
-    console.log(err)
-    return {'success':false, err: err };
+    console.log(err);
+    return { success: false, err: err };
   }
 };
 
