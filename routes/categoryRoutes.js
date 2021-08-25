@@ -1,4 +1,5 @@
 var express = require("express");
+const { ProductItem } = require("../model");
 const { Category } = require("../model/Category");
 
 const router = express.Router();
@@ -86,19 +87,24 @@ router.patch("/:name", async (req, res) => {
     res.sendStatus(404);
   }
   try {
-    const cat = await Category.findOneAndUpdate(
+    let cat = await Category.findOneAndUpdate(
       { company: req.body.companyId, name: req.params.name },
       { $set: { name: req.body.newName } },
       { new: true, useFindAndModify: false }
-    ).populate('products')
-    if(cat) {
-      cat.products.forEach((p,i)=>{
-        cat.products[i].type = req.body.newName;
-      })
-      await cat.save()
+    );
+    if (cat) {
+      await ProductItem.updateMany(
+        { addedCompany: req.body.companyId, type: req.params.name },
+        { $set: { type: req.body.newName } },
+        {
+          new: true,
+          useFindAndModify: false,
+          multi: true,
+        }
+      );
+      cat = await Category.findById(cat._id).populate("products");
       res.send({ success: true, cat: cat });
-    }
-    else res.send({ success: false, error: cat });
+    } else res.send({ success: false, error: cat });
   } catch (e) {
     console.log(e);
     res.send({ success: false, error: e });
@@ -110,11 +116,14 @@ router.delete("/:name", async (req, res) => {
     res.sendStatus(404);
   }
   try {
-    const response = await Category.findOneAndDelete({
+    const cat = await Category.findOne({
       company: req.body.companyId,
       name: req.params.name,
     });
-    res.send({ success: true, response: response });
+    for (let i = 0; i < cat.products.length; i += 1) {
+      await ProductItem.findOneAndDelete({ _id: cat.products[i] });
+    }
+    res.send({ success: true });
   } catch (e) {
     console.log(e);
     res.send({ success: false, error: e });

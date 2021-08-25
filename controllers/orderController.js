@@ -21,7 +21,7 @@ const getOrders = async (query) => {
       .lean()
       .sort({ createdAt: -1 })
       .exec();
-    const opts = ["product", "customer", "company"];
+    const opts = ["customer", "company"];
     const mainOrders = await Order.populate(orders, opts);
     return { data: mainOrders, err: null };
   } catch (error) {
@@ -52,13 +52,16 @@ const updateOrder = async (params) => {
 const updateStatus = async (params) => {
   const { _id, status } = params;
   try {
-    const order = await Order.findOne({ _id })
-      .populate(["customer", "product"])
-      .exec();
+    const order = await Order.findOne({ _id }).populate(["customer"]).exec();
     if (order.status === status) {
       console.log("same status");
       return { data: "Same status for order. Not updating ", err: 0 };
     }
+    if (order.status === "cancelled") {
+      console.log(`Order is already cancelled: ${_id}`);
+      return { data: "Order is already cancelled!. Not updating ", err: 0 };
+    }
+
     order.status = status;
     const newOrder = await order.save();
     console.log("Status updated");
