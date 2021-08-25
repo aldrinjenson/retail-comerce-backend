@@ -116,13 +116,14 @@ router.delete("/:name", async (req, res) => {
     res.sendStatus(404);
   }
   try {
-    const cat = await Category.findOne({
+    await Category.findOneAndDelete({
       company: req.body.companyId,
       name: req.params.name,
     });
-    for (let i = 0; i < cat.products.length; i += 1) {
-      await ProductItem.findOneAndDelete({ _id: cat.products[i] });
-    }
+    await ProductItem.deleteMany({
+      addedCompany: req.body.companyId,
+      type: req.params.name,
+    });
     res.send({ success: true });
   } catch (e) {
     console.log(e);
