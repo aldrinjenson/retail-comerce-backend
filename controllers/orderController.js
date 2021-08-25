@@ -21,7 +21,7 @@ const getOrders = async (query) => {
       .lean()
       .sort({ createdAt: -1 })
       .exec();
-    const opts = ["product", "customer", "company"];
+    const opts = ["customer", "company"];
     const mainOrders = await Order.populate(orders, opts);
     return { data: mainOrders, err: null };
   } catch (error) {
@@ -53,7 +53,7 @@ const updateStatus = async (params) => {
   const { _id, status } = params;
   try {
     const order = await Order.findOne({ _id })
-      .populate(["customer", "product"])
+      .populate(["customer"])
       .exec();
     if (order.status === status) {
       console.log("same status");
