@@ -57,6 +57,11 @@ const updateStatus = async (params) => {
       console.log("same status");
       return { data: "Same status for order. Not updating ", err: 0 };
     }
+    if(order.status === "cancelled") {
+      console.log(`Order is already cancelled: ${_id}`);
+      return { data: "Order is already cancelled!. Not updating ", err: 0 };
+    }
+
     order.status = status;
     const newOrder = await order.save();
     console.log("Status updated");

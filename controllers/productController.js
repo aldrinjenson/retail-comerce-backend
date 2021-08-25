@@ -113,13 +113,10 @@ const deleteProduct = async (req) => {
       company: req.body.company,
       name: req.body.type,
     });
-    console.log("hi");
     cat.products = cat.products.filter((el) => {
       return el._id != req.body.id;
     });
-    console.log("hey");
     await cat.save();
-    console.log("hello");
     return { success: true, msg: "product deleted", err: 0, res: res };
   } catch (err) {
     console.log(err);

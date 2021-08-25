@@ -91,11 +91,18 @@ router.patch("/:name", async (req, res) => {
       { company: req.body.companyId, name: req.params.name },
       { $set: { name: req.body.newName } },
       { new: true, useFindAndModify: false }
-    ).populate("products");
+    )
     if (cat) {
-      cat.products.forEach((p, i) => {
-        cat.products[i].type = req.body.newName;
-      });
+    await ProductItem.updateMany(
+        { addedCompany: req.body.companyId, type:req.params.name},
+        { $set: { type: req.body.newName } },
+        {
+            new: true,
+            useFindAndModify: false,
+            multi: true
+        }
+        );
+   
       await cat.save();
       res.send({ success: true, cat: cat });
     } else res.send({ success: false, error: cat });
