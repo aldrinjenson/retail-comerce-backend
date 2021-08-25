@@ -87,24 +87,23 @@ router.patch("/:name", async (req, res) => {
     res.sendStatus(404);
   }
   try {
-    const cat = await Category.findOneAndUpdate(
+    let cat = await Category.findOneAndUpdate(
       { company: req.body.companyId, name: req.params.name },
       { $set: { name: req.body.newName } },
       { new: true, useFindAndModify: false }
-    )
+    );
     if (cat) {
-    await ProductItem.updateMany(
-        { addedCompany: req.body.companyId, type:req.params.name},
-        { $set: { type: req.body.newName } },
-        {
+      await ProductItem.updateMany(
+            { addedCompany: req.body.companyId, type: req.params.name },
+            { $set: { type: req.body.newName } },
+            {
             new: true,
             useFindAndModify: false,
-            multi: true
-        }
+            multi: true,
+            }
         );
-   
-      await cat.save();
-      res.send({ success: true, cat: cat });
+        cat = await Category.findById(cat._id).populate('products')
+        res.send({ success: true, cat: cat });
     } else res.send({ success: false, error: cat });
   } catch (e) {
     console.log(e);
