@@ -19,7 +19,7 @@ const getOrders = async (query) => {
   try {
     const orders = await Order.find(query || {})
       .lean()
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .exec();
     const opts = ["product", "customer", "company"];
     const mainOrders = await Order.populate(orders, opts);
