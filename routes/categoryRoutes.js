@@ -91,15 +91,14 @@ router.patch("/:name", async (req, res) => {
       { company: req.body.companyId, name: req.params.name },
       { $set: { name: req.body.newName } },
       { new: true, useFindAndModify: false }
-    ).populate('products')
-    if(cat) {
-      cat.products.forEach((p,i)=>{
+    ).populate("products");
+    if (cat) {
+      cat.products.forEach((p, i) => {
         cat.products[i].type = req.body.newName;
-      })
-      await cat.save()
+      });
+      await cat.save();
       res.send({ success: true, cat: cat });
-    }
-    else res.send({ success: false, error: cat });
+    } else res.send({ success: false, error: cat });
   } catch (e) {
     console.log(e);
     res.send({ success: false, error: e });
@@ -115,8 +114,8 @@ router.delete("/:name", async (req, res) => {
       company: req.body.companyId,
       name: req.params.name,
     });
-    for(let i=0; i<cat.products.length; i+=1) {
-        await ProductItem.findOneAndDelete({ _id: cat.products[i] });
+    for (let i = 0; i < cat.products.length; i += 1) {
+      await ProductItem.findOneAndDelete({ _id: cat.products[i] });
     }
     res.send({ success: true });
   } catch (e) {

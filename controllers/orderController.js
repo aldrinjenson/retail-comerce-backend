@@ -52,9 +52,7 @@ const updateOrder = async (params) => {
 const updateStatus = async (params) => {
   const { _id, status } = params;
   try {
-    const order = await Order.findOne({ _id })
-      .populate(["customer"])
-      .exec();
+    const order = await Order.findOne({ _id }).populate(["customer"]).exec();
     if (order.status === status) {
       console.log("same status");
       return { data: "Same status for order. Not updating ", err: 0 };
