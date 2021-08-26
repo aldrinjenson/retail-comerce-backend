@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 const axios = require("axios");
-const fast2sms = require("fast-two-sms");
 const { Order } = require("../model");
+const { sendSmsMsg } = require("../utils/misc");
 
 const addOrder = async (order) => {
   try {
@@ -14,19 +14,10 @@ const addOrder = async (order) => {
     const populatedOrder = await Order.populate(savedOrder, ["company"]);
 
     console.log("new Order saved");
-    const msgText = `New order for ${populatedOrder.product.name} has been made by ${newOrder.orderedBy} from ${newOrder.orderedAddress}.\n\nFor more details check out the FruitBot portal!\n- Fruit Bot (t.me/OK_fruitbot)`;
-    var options = {
-      authorization: process.env.FAST2SMS_API_KEY,
-      message: msgText,
-      numbers: [populatedOrder.company.phoneNo],
-      sender_id: "SAI_REHAB",
-    };
-    fast2sms
-      .sendMessage(options)
-      .then((resp) => console.log("SMS sent to seller", resp))
-      .catch((err) => {
-        console.log("error in sending SMS: " + err);
-      });
+    sendSmsMsg(
+      populatedOrder.company.phoneNo,
+      `New order for ${populatedOrder.product.name} has been made by ${newOrder.orderedBy} from ${newOrder.orderedAddress}.\n\nFor more details check out the FruitBot portal!\n- Fruit Bot (t.me/OK_fruitbot)`
+    );
 
     return { data: populatedOrder, err: 0 };
   } catch (error) {
@@ -96,24 +87,22 @@ const updateStatus = async (params) => {
       .catch((err) => console.log("err: " + err));
 
     // send sms message
-    const msgText = `Your order for ${order.product.brand || ""} ${
-      order.product.name
-    } from ${order.company.name} has been ${
-      order.status
-    }.\n- Fruit Bot (t.me/OK_fruitbot)`;
-
-    var options = {
-      authorization: process.env.FAST2SMS_API_KEY,
-      message: msgText,
-      numbers: [order.orderedPhoneNo],
-      sender_id: "SAI_REHAB",
-    };
-    fast2sms
-      .sendMessage(options)
-      .then(() => console.log("SMS sent"))
-      .catch((err) => {
-        console.log("error in sending SMS: " + err);
-      });
+    sendSmsMsg(
+      order.orderedPhoneNo,
+      `Your order for ${order.product.brand || ""} ${order.product.name} from ${
+        order.company.name
+      } has been ${order.status}.\n- Fruit Bot (t.me/OK_fruitbot)`
+    );
+    if (status === "cancelled") {
+      sendSmsMsg(
+        order.company.phoneNo,
+        `Order for ${order.product.brand || ""} ${order.product.name} by ${
+          order.orderedBy
+        } from ${
+          order.orderedAddress
+        } has been cancelled.\nTo know more details, visit the FruitBoT portal\n- FruitBoT (t.me/OK_fruitbot)`
+      );
+    }
 
     return { data: newOrder, err: null };
   } catch (error) {
