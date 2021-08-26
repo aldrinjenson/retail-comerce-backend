@@ -4,8 +4,6 @@ const fast2sms = require("fast-two-sms");
 const { Order } = require("../model");
 
 const addOrder = async (order) => {
-  console.log(order);
-  // return;
   try {
     const newOrder = new Order({
       ...order,
@@ -14,10 +12,9 @@ const addOrder = async (order) => {
     });
     const savedOrder = await newOrder.save();
     const populatedOrder = await Order.populate(savedOrder, ["company"]);
-    console.log(newOrder, savedOrder, populatedOrder);
+
     console.log("new Order saved");
-    const msgText = `New order for ${order.product.name} has been made by ${newOrder.orderedBy} from ${newOrder.orderedAddress}.\nCheck out more details by visiting the portal!\nHave a nice day:)\n- Fruit Bot (t.me/OK_fruitbot)`;
-    console.log(msgText);
+    const msgText = `New order for ${populatedOrder.product.name} has been made by ${newOrder.orderedBy} from ${newOrder.orderedAddress}.\n\nFor more details check out the FruitBot portal!\n- Fruit Bot (t.me/OK_fruitbot)`;
     var options = {
       authorization: process.env.FAST2SMS_API_KEY,
       message: msgText,
@@ -76,49 +73,47 @@ const updateStatus = async (params) => {
   const { _id, status } = params;
   try {
     const order = await Order.findOne({ _id })
-      .populate(["customer", "product", "company"])
+      .populate(["customer", "company"])
       .exec();
-    console.log({ order });
     if (order.status === status) {
       console.log("same status");
       return { data: "Same status for order. Not updating ", err: 0 };
     }
-    // if (order.status === "cancelled") {
-    //   console.log(`Order is already cancelled: ${_id}`);
-    //   return { data: "Order is already cancelled!. Not updating ", err: 0 };
-    // }
+    if (order.status === "cancelled") {
+      console.log(`Order is already cancelled: ${_id}`);
+      return { data: "Order is already cancelled!. Not updating ", err: 0 };
+    }
 
     order.status = status;
     const newOrder = await order.save();
-    console.log({ newOrder });
-    // console.log("Status updated");
-    // const botUrl = `${process.env.BOT_BASE_URL}/notify`;
-    // axios
-    //   .post(botUrl, {
-    //     payload: newOrder,
-    //     type: "STATUS_UPDATE",
-    //   })
-    //   .catch((err) => console.log("err: " + err));
+    console.log("Status updated");
+    const botUrl = `${process.env.BOT_BASE_URL}/notify`;
+    axios
+      .post(botUrl, {
+        payload: newOrder,
+        type: "STATUS_UPDATE",
+      })
+      .catch((err) => console.log("err: " + err));
 
     // send sms message
-    // const msgText = `Your order for ${order.product.brand || ""} ${
-    //   order.product.name
-    // } from ${order.company.name} has been ${
-    //   order.status
-    // }. \nHave a nice day:)\n- Fruit Bot (t.me/OK_fruitbot)`;
+    const msgText = `Your order for ${order.product.brand || ""} ${
+      order.product.name
+    } from ${order.company.name} has been ${
+      order.status
+    }.\n- Fruit Bot (t.me/OK_fruitbot)`;
 
-    // var options = {
-    //   authorization: process.env.FAST2SMS_API_KEY,
-    //   message: msgText,
-    //   numbers: [order.orderedPhoneNo],
-    //   sender_id: "SAI_REHAB",
-    // };
-    // fast2sms
-    //   .sendMessage(options)
-    //   .then(() => console.log("SMS sent"))
-    //   .catch((err) => {
-    //     console.log("error in sending SMS: " + err);
-    //   });
+    var options = {
+      authorization: process.env.FAST2SMS_API_KEY,
+      message: msgText,
+      numbers: [order.orderedPhoneNo],
+      sender_id: "SAI_REHAB",
+    };
+    fast2sms
+      .sendMessage(options)
+      .then(() => console.log("SMS sent"))
+      .catch((err) => {
+        console.log("error in sending SMS: " + err);
+      });
 
     return { data: newOrder, err: null };
   } catch (error) {
