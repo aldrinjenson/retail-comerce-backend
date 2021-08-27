@@ -45,6 +45,20 @@ const OrderSchema = new Schema(
       type: String,
       required: false,
     },
+    deliveryLocation: {
+      lat: {
+        type: Number,
+        required: false,
+      },
+      long: {
+        type: Number,
+        required: false,
+      },
+      isAvailable: {
+        type: Boolean,
+        required: false,
+      },
+    },
   },
   { timestamps: true }
 );
