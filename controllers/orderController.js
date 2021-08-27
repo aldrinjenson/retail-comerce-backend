@@ -1,13 +1,24 @@
 // eslint-disable-next-line no-unused-vars
 const axios = require("axios");
 const { Order } = require("../model");
+const { sendSmsMsg } = require("../utils/misc");
 
 const addOrder = async (order) => {
   try {
-    const newOrder = new Order({ ...order, status: "pending" });
+    const newOrder = new Order({
+      ...order,
+      product: order.product,
+      status: "pending",
+    });
     const savedOrder = await newOrder.save();
-    const populatedOrder = await Order.populate(savedOrder, "company");
+    const populatedOrder = await Order.populate(savedOrder, ["company"]);
+
     console.log("new Order saved");
+    sendSmsMsg(
+      populatedOrder.company.phoneNo,
+      `New order for ${populatedOrder.product.name} has been made by ${newOrder.orderedBy} from ${newOrder.orderedAddress}.\n\nFor more details check out the FruitBot portal!\n- Fruit Bot (t.me/OK_fruitbot)`
+    );
+
     return { data: populatedOrder, err: 0 };
   } catch (error) {
     console.log("Error in saving new order: " + error);
@@ -52,7 +63,9 @@ const updateOrder = async (params) => {
 const updateStatus = async (params) => {
   const { _id, status } = params;
   try {
-    const order = await Order.findOne({ _id }).populate(["customer"]).exec();
+    const order = await Order.findOne({ _id })
+      .populate(["customer", "company"])
+      .exec();
     if (order.status === status) {
       console.log("same status");
       return { data: "Same status for order. Not updating ", err: 0 };
@@ -66,11 +79,31 @@ const updateStatus = async (params) => {
     const newOrder = await order.save();
     console.log("Status updated");
     const botUrl = `${process.env.BOT_BASE_URL}/notify`;
-    console.log(botUrl);
-    axios.post(botUrl, {
-      payload: newOrder,
-      type: "STATUS_UPDATE",
-    });
+    axios
+      .post(botUrl, {
+        payload: newOrder,
+        type: "STATUS_UPDATE",
+      })
+      .catch((err) => console.log("err: " + err));
+
+    // send sms message
+    sendSmsMsg(
+      order.orderedPhoneNo,
+      `Your order for ${order.product.brand || ""} ${order.product.name} from ${
+        order.company.name
+      } has been ${order.status}.\n- Fruit Bot (t.me/OK_fruitbot)`
+    );
+    if (status === "cancelled") {
+      sendSmsMsg(
+        order.company.phoneNo,
+        `Order for ${order.product.brand || ""} ${order.product.name} by ${
+          order.orderedBy
+        } from ${
+          order.orderedAddress
+        } has been cancelled.\nTo know more details, visit the FruitBoT portal\n- FruitBoT (t.me/OK_fruitbot)`
+      );
+    }
+
     return { data: newOrder, err: null };
   } catch (error) {
     console.log("error in getting orders" + error);
