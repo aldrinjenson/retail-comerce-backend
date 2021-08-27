@@ -41,6 +41,10 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
+    orderedEmail: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );

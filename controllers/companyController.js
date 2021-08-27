@@ -1,4 +1,5 @@
 const { Company } = require("../model");
+const { sendSmsMsg } = require("../utils/misc");
 
 const addCompany = async (company) => {
   const { email } = company;
@@ -10,8 +11,14 @@ const addCompany = async (company) => {
   const newCompany = new Company(company);
   try {
     const savedCompany = await newCompany.save();
-    console.log("Company saved");
-    return savedCompany;
+    if (savedCompany) {
+      console.log("Company saved");
+      sendSmsMsg(
+        company.phoneNo,
+        `You have been successfully registered in ${process.env.PORTAL_NAME}.\n For getting updates for your orders, you can always visit ${process.env.PORTAL_URL}`
+      );
+      return savedCompany;
+    }
   } catch (err) {
     console.log("error in saving:  " + err);
     return { msg: "error: " + err, err: 1 };
