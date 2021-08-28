@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { ProductItemSchema } = require("./ProductItem");
 const { Schema } = mongoose;
 const OrderSchema = new Schema(
   {
@@ -12,9 +13,8 @@ const OrderSchema = new Schema(
       ref: "Customer",
     },
     product: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: ProductItemSchema,
       required: true,
-      ref: "ProductItem",
     },
     company: {
       type: mongoose.Schema.Types.ObjectId,
@@ -40,6 +40,24 @@ const OrderSchema = new Schema(
     orderedAddress: {
       type: String,
       required: true,
+    },
+    orderedEmail: {
+      type: String,
+      required: false,
+    },
+    deliveryLocation: {
+      lat: {
+        type: Number,
+        required: false,
+      },
+      long: {
+        type: Number,
+        required: false,
+      },
+      isAvailable: {
+        type: Boolean,
+        required: false,
+      },
     },
   },
   { timestamps: true }

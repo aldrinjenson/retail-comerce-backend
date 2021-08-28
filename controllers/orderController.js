@@ -1,13 +1,24 @@
 // eslint-disable-next-line no-unused-vars
 const axios = require("axios");
 const { Order } = require("../model");
+const { sendSmsMsg } = require("../utils/misc");
 
 const addOrder = async (order) => {
   try {
-    const newOrder = new Order({ ...order, status: "pending" });
+    const newOrder = new Order({
+      ...order,
+      product: order.product,
+      status: "pending",
+    });
     const savedOrder = await newOrder.save();
-    const populatedOrder = await Order.populate(savedOrder, "company");
+    const populatedOrder = await Order.populate(savedOrder, ["company"]);
+
     console.log("new Order saved");
+    sendSmsMsg(
+      populatedOrder.company.phoneNo,
+      `New order for ${populatedOrder.product.name} has been made by ${newOrder.orderedBy} from ${newOrder.orderedAddress}.\n\nFor more details visit ${process.env.PORTAL_URL}.\n- ${process.env.BOT_NAME}`
+    );
+
     return { data: populatedOrder, err: 0 };
   } catch (error) {
     console.log("Error in saving new order: " + error);
@@ -19,9 +30,9 @@ const getOrders = async (query) => {
   try {
     const orders = await Order.find(query || {})
       .lean()
-      .sort({ createdAt: 1 })
+      .sort({ createdAt: -1 })
       .exec();
-    const opts = ["product", "customer", "company"];
+    const opts = ["customer", "company"];
     const mainOrders = await Order.populate(orders, opts);
     return { data: mainOrders, err: null };
   } catch (error) {
@@ -53,21 +64,50 @@ const updateStatus = async (params) => {
   const { _id, status } = params;
   try {
     const order = await Order.findOne({ _id })
-      .populate(["customer", "product"])
+      .populate(["customer", "company"])
       .exec();
     if (order.status === status) {
       console.log("same status");
       return { data: "Same status for order. Not updating ", err: 0 };
     }
+    if (order.status === "cancelled") {
+      console.log(`Order is already cancelled: ${_id}`);
+      return { data: "Order is already cancelled!. Not updating ", err: 0 };
+    }
+
     order.status = status;
     const newOrder = await order.save();
     console.log("Status updated");
     const botUrl = `${process.env.BOT_BASE_URL}/notify`;
-    console.log(botUrl);
-    axios.post(botUrl, {
-      payload: newOrder,
-      type: "STATUS_UPDATE",
-    });
+    axios
+      .post(botUrl, {
+        payload: newOrder,
+        type: "STATUS_UPDATE",
+      })
+      .catch((err) => console.log("err: " + err));
+
+    // send sms message
+    sendSmsMsg(
+      order.orderedPhoneNo,
+      `Your order for ${order.product.brand || ""} ${order.product.name} from ${
+        order.company.name
+      } has been ${order.status}.\n- ${process.env.BOT_NAME} (t.me/${
+        process.env.BOT_TG_ID
+      })`
+    );
+    if (status === "cancelled") {
+      sendSmsMsg(
+        order.company.phoneNo,
+        `Order for ${order.product.brand || ""} ${order.product.name} by ${
+          order.orderedBy
+        } from ${
+          order.orderedAddress
+        } has been cancelled.\nTo know more details, visit ${
+          process.env.PORTAL_URL
+        }\n- ${process.env.BOT_NAME}`
+      );
+    }
+
     return { data: newOrder, err: null };
   } catch (error) {
     console.log("error in getting orders" + error);

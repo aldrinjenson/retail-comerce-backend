@@ -1,13 +1,13 @@
 // const express = require("express");
 // const router = express.Router();
 const { ProductItem } = require("../model");
+const { Category } = require("../model/Category");
 const { Company } = require("../model/Company");
 
 const addProducts = async (req) => {
   try {
     const compId = req.body.companyId;
     const comp = await Company.findOne({ _id: compId });
-
     const product = new ProductItem({
       name: req.body.model,
       brand: req.body.brand,
@@ -20,7 +20,12 @@ const addProducts = async (req) => {
       companyLocation: comp.locality,
       addedCompany: compId,
     });
-    await product.save();
+    const p = await product.save();
+    await Category.findOneAndUpdate(
+      { company: compId, name: req.body.type },
+      { $push: { products: p._id } }
+    );
+
     // update hasProduct Field to be True in companies collection when a product is added
     const newvalue = { $set: { hasProducts: true } };
     Company.updateOne({ _id: compId }, newvalue, function (err) {
@@ -64,4 +69,65 @@ const searchProducts = async (query) => {
   }
 };
 
-module.exports.ProductController = { addProducts, getProducts, searchProducts };
+const updateProduct = async (req) => {
+  try {
+    const compId = req.body.companyId;
+    const comp = await Company.findOne({ _id: compId });
+    const compName = comp["name"];
+    const urls = req.body.images;
+
+    const res = await ProductItem.findOneAndUpdate(
+      { _id: req.body.id },
+      {
+        name: req.body.model,
+        brand: req.body.brand,
+        price: req.body.price,
+        discountedPrice: req.body.discountedPrice,
+        type: req.body.type,
+        description: req.body.description,
+        imgUrls: urls,
+        companyName: compName,
+        addedCompany: compId,
+      },
+      {
+        new: true,
+        useFindAndModify: false,
+      }
+    );
+    if (!res) {
+      return { success: false, err: "cannot update" };
+    }
+    return { success: true, message: "product saved", res: res };
+  } catch (err) {
+    return { success: false, error: err };
+  }
+};
+
+const deleteProduct = async (req) => {
+  try {
+    const res = await ProductItem.findOneAndDelete({ _id: req.body.id });
+    if (!res) {
+      return { success: false, err: "cannot delete" };
+    }
+    const cat = await Category.findOne({
+      company: req.body.company,
+      name: req.body.type,
+    });
+    cat.products = cat.products.filter((el) => {
+      return el._id != req.body.id;
+    });
+    await cat.save();
+    return { success: true, msg: "product deleted", err: 0, res: res };
+  } catch (err) {
+    console.log(err);
+    return { success: false, err: err };
+  }
+};
+
+module.exports.ProductController = {
+  addProducts,
+  getProducts,
+  searchProducts,
+  updateProduct,
+  deleteProduct,
+};
