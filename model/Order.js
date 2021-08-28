@@ -41,6 +41,24 @@ const OrderSchema = new Schema(
       type: String,
       required: true,
     },
+    orderedEmail: {
+      type: String,
+      required: false,
+    },
+    location: {
+      lat: {
+        type: Number,
+        required: false,
+      },
+      long: {
+        type: Number,
+        required: false,
+      },
+      isAvailable: {
+        type: Boolean,
+        required: false,
+      },
+    },
   },
   { timestamps: true }
 );

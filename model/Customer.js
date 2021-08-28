@@ -26,6 +26,24 @@ const CustomerSchema = new Schema(
       type: String,
       required: false,
     },
+    email: {
+      type: String,
+      required: false,
+    },
+    location: {
+      lat: {
+        type: Number,
+        required: false,
+      },
+      long: {
+        type: Number,
+        required: false,
+      },
+      isAvailable: {
+        type: Boolean,
+        required: false,
+      },
+    },
   },
   { timestamps: true }
 );

@@ -16,7 +16,7 @@ const sendSmsMsg = async (number, msgText) => {
     if (!resp) {
       console.log("error in sending SMS");
     } else {
-      console.log("SMS sent", resp);
+      console.log("SMS sent", resp.message);
     }
   } catch (error) {
     console.log("Error in sending SMS: " + error);
