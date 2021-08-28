@@ -2,6 +2,7 @@ const express = require("express");
 const bcrypt = require("bcryptjs");
 const router = express.Router();
 const { Company } = require("../model/Company");
+const { sendSmsMsg } = require("../utils/misc");
 
 router.post("/", async (req, res) => {
   // check if username already exist in db
@@ -26,10 +27,18 @@ router.post("/", async (req, res) => {
     password: hashedPassword,
   });
 
+  console.log(company);
+
   try {
     const savedCompany = await company.save();
+    console.log("Company saved");
+    sendSmsMsg(
+      company.phoneNo,
+      `You have been successfully registered in ${process.env.PORTAL_NAME}.\n For getting updates for your orders, you can always visit ${process.env.PORTAL_URL}`
+    );
     res.send(savedCompany);
   } catch (err) {
+    console.log(err);
     res.status(400).send(err);
   }
 });
