@@ -45,7 +45,7 @@ const OrderSchema = new Schema(
       type: String,
       required: false,
     },
-    deliveryLocation: {
+    location: {
       lat: {
         type: Number,
         required: false,
