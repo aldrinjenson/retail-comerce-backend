@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
+const { GeoSchema } = require("./Misc");
 const { ProductItemSchema } = require("./ProductItem");
 const { Schema } = mongoose;
+
 const OrderSchema = new Schema(
   {
     paymentMethod: {
@@ -45,20 +47,7 @@ const OrderSchema = new Schema(
       type: String,
       required: false,
     },
-    location: {
-      lat: {
-        type: Number,
-        required: false,
-      },
-      long: {
-        type: Number,
-        required: false,
-      },
-      isAvailable: {
-        type: Boolean,
-        required: false,
-      },
-    },
+    location: GeoSchema,
   },
   { timestamps: true }
 );

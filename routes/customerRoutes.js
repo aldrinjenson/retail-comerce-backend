@@ -7,7 +7,7 @@ router.get("/", async (req, res) => {
   res.send(await CustomerController.getCustomer(query));
 });
 
-router.post("/", async (req, res) => {
+router.patch("/", async (req, res) => {
   const { body: customer } = req;
   res.send(await CustomerController.addCustomer(customer));
 });
