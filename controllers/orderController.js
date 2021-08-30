@@ -16,7 +16,7 @@ const addOrder = async (order) => {
     console.log("new Order saved");
     sendSmsMsg(
       populatedOrder.company.phoneNo,
-      `New order for ${populatedOrder.product.name} has been made by ${newOrder.orderedBy} from ${newOrder.orderedAddress}.\n\nFor more details visit ${process.env.PORTAL_URL}.\n- ${process.env.BOT_NAME}`
+      `New order for ${populatedOrder.product.name} has been made by ${newOrder.orderedBy}.\n\nFor more details visit ${process.env.PORTAL_URL}.\n- ${process.env.BOT_NAME}`
     );
 
     return { data: populatedOrder, err: 0 };
@@ -86,7 +86,6 @@ const updateStatus = async (params) => {
       })
       .catch((err) => console.log("err: " + err));
 
-    // send sms message
     sendSmsMsg(
       order.orderedPhoneNo,
       `Your order for ${order.product.brand || ""} ${order.product.name} from ${
@@ -100,8 +99,6 @@ const updateStatus = async (params) => {
         order.company.phoneNo,
         `Order for ${order.product.brand || ""} ${order.product.name} by ${
           order.orderedBy
-        } from ${
-          order.orderedAddress
         } has been cancelled.\nTo know more details, visit ${
           process.env.PORTAL_URL
         }\n- ${process.env.BOT_NAME}`
