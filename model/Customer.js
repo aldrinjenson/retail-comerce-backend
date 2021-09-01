@@ -31,16 +31,10 @@ const CustomerSchema = new Schema(
       required: false,
     },
     location: {
-      lat: {
-        type: Number,
-        required: false,
-      },
-      long: {
-        type: Number,
-        required: false,
-      },
-      isAvailable: {
-        type: Boolean,
+      type: { type: String, default: "Point" },
+      coordinates: {
+        type: [Number],
+        index: "2dsphere",
         required: false,
       },
     },

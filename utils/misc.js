@@ -1,4 +1,5 @@
 const fast2sms = require("fast-two-sms");
+const axios = require("axios");
 
 const escapeRegex = (text) => {
   return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
@@ -23,4 +24,14 @@ const sendSmsMsg = async (number, msgText) => {
   }
 };
 
-module.exports = { escapeRegex, sendSmsMsg };
+const getCoordinatesFromPin = async (pinCode) => {
+  const [geoData] = (
+    await axios.get(
+      `https://maps.googleapis.com/maps/api/geocode/json?&address=${pinCode}&key=${process.env.G_MAPS_API_KEY}`
+    )
+  ).data.results;
+  const { lat, lng } = geoData.geometry.location;
+  return [lng, lat];
+};
+
+module.exports = { escapeRegex, sendSmsMsg, getCoordinatesFromPin };

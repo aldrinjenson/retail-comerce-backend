@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { GeoSchema } = require("./Misc");
 const { Schema } = mongoose;
 const CompanySchema = new Schema(
   {
@@ -53,6 +54,7 @@ const CompanySchema = new Schema(
       type: String,
       required: false,
     },
+    location: GeoSchema,
   },
   { timestamps: true }
 );
