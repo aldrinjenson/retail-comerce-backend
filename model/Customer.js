@@ -38,6 +38,18 @@ const CustomerSchema = new Schema(
         required: false,
       },
     },
+    cartItems: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "ProductItem",
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

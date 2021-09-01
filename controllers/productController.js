@@ -3,6 +3,7 @@
 const { ProductItem } = require("../model");
 const { Category } = require("../model/Category");
 const { Company } = require("../model/Company");
+const { getCoordinatesFromPin } = require("../utils/misc");
 
 const addProducts = async (req) => {
   try {
@@ -52,16 +53,31 @@ const getProducts = async (query) => {
 
 const searchProducts = async (query) => {
   try {
-    const { searchTerm } = query;
-    const products = await ProductItem.find({
+    const { searchTerm, pinCode } = query;
+    let productQuery = {
       $or: [
         { name: { $regex: searchTerm, $options: "i" } },
         { type: { $regex: searchTerm, $options: "i" } },
         { brand: { $regex: searchTerm, $options: "i" } },
       ],
-    })
-      .lean()
-      .exec();
+    };
+    if (pinCode) {
+      const companyQuery = {
+        location: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: await getCoordinatesFromPin(pinCode),
+            },
+            $maxDistance: 10000, // specified in meters
+          },
+        },
+      };
+      const companies = await Company.find(companyQuery, "_id").lean().exec();
+      const companyIds = companies.map((company) => company._id);
+      productQuery.addedCompany = { $in: companyIds };
+    }
+    const products = await ProductItem.find(productQuery).lean().exec();
     return { data: products, err: null };
   } catch (err) {
     console.log("error in searching products" + err);

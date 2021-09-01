@@ -26,6 +26,7 @@ const addCustomer = async (customer) => {
 const getCustomer = async (query) => {
   try {
     const customers = await Customer.find(query || {})
+      .populate("cartItems.product")
       .lean()
       .exec();
     return { data: customers, err: null };
