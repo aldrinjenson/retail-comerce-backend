@@ -9,6 +9,7 @@ const CustomerSchema = new Schema(
     tgUserId: {
       type: Number,
       required: true,
+      unique: true,
     },
     name: {
       type: String,

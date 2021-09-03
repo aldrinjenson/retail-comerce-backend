@@ -20,6 +20,9 @@ const addProducts = async (req) => {
       companyName: comp.name,
       companyLocation: comp.locality,
       addedCompany: compId,
+      isOutOfStock: false,
+      baseQuantity: req.body.baseQuantity,
+      unit: req.body.unit,
     });
     const p = await product.save();
     await Category.findOneAndUpdate(
@@ -39,9 +42,8 @@ const addProducts = async (req) => {
 };
 
 const getProducts = async (query) => {
-  // query is optional
   try {
-    const products = await ProductItem.find(query || {})
+    const products = await ProductItem.find({ ...query } || {})
       .lean()
       .exec();
     return { data: products, err: null };
@@ -60,6 +62,7 @@ const searchProducts = async (query) => {
         { type: { $regex: searchTerm, $options: "i" } },
         { brand: { $regex: searchTerm, $options: "i" } },
       ],
+      // isOutOfStock: false,
     };
     if (pinCode) {
       const companyQuery = {
@@ -104,6 +107,9 @@ const updateProduct = async (req) => {
         imgUrls: urls,
         companyName: compName,
         addedCompany: compId,
+        isOutOfStock: req.body.isOutOfStock,
+        baseQuantity: req.body.baseQuantity,
+        unit: req.body.unit,
       },
       {
         new: true,

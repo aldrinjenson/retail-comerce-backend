@@ -32,6 +32,7 @@ router.post("/", async (req, res) => {
     password: hashedPassword,
     pinCode,
     location,
+    deliverySlots: [],
   });
 
   try {

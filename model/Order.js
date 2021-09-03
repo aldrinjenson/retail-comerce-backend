@@ -26,6 +26,7 @@ const OrderSchema = new Schema(
     status: {
       type: String,
       required: true,
+      enum: ["cancelled", "confirmed", "pending", "dispatched", "delivered"],
     },
     feedback: {
       type: String,
@@ -48,6 +49,9 @@ const OrderSchema = new Schema(
       required: false,
     },
     location: GeoSchema,
+    totalPrice: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

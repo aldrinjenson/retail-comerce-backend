@@ -42,6 +42,18 @@ const ProductItemSchema = new Schema(
       type: mongoose.Schema.Types.ObjectId,
       required: false,
     },
+    baseQuantity: {
+      type: Number,
+      default: 1,
+    },
+    unit: {
+      type: String,
+      default: "nos.",
+    },
+    isOutOfStock: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );

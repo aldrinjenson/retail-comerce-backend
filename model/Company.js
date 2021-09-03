@@ -55,6 +55,7 @@ const CompanySchema = new Schema(
       required: false,
     },
     location: GeoSchema,
+    deliverySlots: [String],
   },
   { timestamps: true }
 );

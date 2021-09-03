@@ -8,9 +8,13 @@ const addCustomer = async (customer) => {
       customer,
       { new: true, useFindAndModify: false }
     ).exec();
+
     if (existingCustomer) {
       console.log("Customer already exists");
-      return { data: existingCustomer, err: 0 };
+      return {
+        data: await Customer.populate(existingCustomer, "cartItems.product"),
+        err: 0,
+      };
     }
     // if customer doesn't exist in db
     const newCustomer = new Customer(customer);
