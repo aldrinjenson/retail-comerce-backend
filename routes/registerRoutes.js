@@ -6,36 +6,37 @@ const { sendSmsMsg, getCoordinatesFromPin } = require("../utils/misc");
 
 router.post("/", async (req, res) => {
   // check if username already exist in db
-  const iscompany = await Company.findOne({ username: req.body.username });
-  if (iscompany) {
-    return res.status(400).send("username already exist");
-  }
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
-  const { pinCode } = req.body;
-  const location = {
-    type: "Point",
-    coordinates: await getCoordinatesFromPin(pinCode),
-  };
-
-  const company = new Company({
-    username: req.body.username,
-    name: req.body.name,
-    hasProducts: false,
-    phoneNo: req.body.phoneNo,
-    locality: req.body.locality,
-    district: req.body.district,
-    state: req.body.state,
-    email: "",
-    upi: "",
-    password: hashedPassword,
-    pinCode,
-    location,
-    deliverySlots: [],
-  });
-
   try {
+    const iscompany = await Company.findOne({ username: req.body.username });
+    if (iscompany) {
+      return res.status(400).send("username already exist");
+    }
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(req.body.password, salt);
+
+    const { pinCode } = req.body;
+    console.log(req.body);
+    const location = {
+      type: "Point",
+      coordinates: await getCoordinatesFromPin(pinCode),
+    };
+
+    const company = new Company({
+      username: req.body.username,
+      name: req.body.name,
+      hasProducts: false,
+      phoneNo: req.body.phoneNo,
+      locality: req.body.locality,
+      district: req.body.district,
+      state: req.body.state,
+      email: "",
+      upi: "",
+      password: hashedPassword,
+      pinCode,
+      location,
+      deliverySlots: [],
+    });
+
     const savedCompany = await company.save();
     console.log("Company saved");
     sendSmsMsg(

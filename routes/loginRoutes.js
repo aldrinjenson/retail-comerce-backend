@@ -7,7 +7,9 @@ const { Company } = require("../model/Company");
 router.post("/", async (req, res) => {
   // check if username already exist in db
   try {
-    const companyUser = await Company.findOne({ username: req.body.username });
+    const companyUser = await Company.findOne({ username: req.body.username })
+      .select("+password")
+      .exec();
 
     if (!companyUser) {
       return res.status(400).send({ success: false });

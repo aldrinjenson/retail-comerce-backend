@@ -1,6 +1,5 @@
 var express = require("express");
-const { ProductItem } = require("../model");
-const { Category } = require("../model/Category");
+const { ProductItem, Category } = require("../model");
 
 const router = express.Router();
 
@@ -17,6 +16,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   if (!req.body.companyId) {
     res.sendStatus(404);
+    return;
   }
   try {
     const catExists = await Category.findOne({
@@ -62,6 +62,7 @@ router.get("/products", async (req, res) => {
 router.post("/products/:name", async (req, res) => {
   if (!req.body.companyId) {
     res.sendStatus(404);
+    return;
   }
   try {
     const cat = await Category.findOne({
@@ -85,6 +86,7 @@ router.post("/products/:name", async (req, res) => {
 router.patch("/:name", async (req, res) => {
   if (!req.body.companyId) {
     res.sendStatus(404);
+    return;
   }
   try {
     let cat = await Category.findOneAndUpdate(
@@ -114,6 +116,7 @@ router.patch("/:name", async (req, res) => {
 router.delete("/:name", async (req, res) => {
   if (!req.body.companyId) {
     res.sendStatus(404);
+    return;
   }
   try {
     await Category.findOneAndDelete({
