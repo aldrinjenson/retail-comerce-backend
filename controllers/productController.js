@@ -3,6 +3,7 @@
 const { ProductItem } = require("../model");
 const { Category } = require("../model/Category");
 const { Company } = require("../model/Company");
+const { getCoordinatesFromPin } = require("../utils/misc");
 
 const addProducts = async (req) => {
   try {
@@ -19,6 +20,9 @@ const addProducts = async (req) => {
       companyName: comp.name,
       companyLocation: comp.locality,
       addedCompany: compId,
+      isOutOfStock: false,
+      baseQuantity: req.body.baseQuantity,
+      unit: req.body.unit,
     });
     const p = await product.save();
     await Category.findOneAndUpdate(
@@ -38,9 +42,8 @@ const addProducts = async (req) => {
 };
 
 const getProducts = async (query) => {
-  // query is optional
   try {
-    const products = await ProductItem.find(query || {})
+    const products = await ProductItem.find({ ...query } || {})
       .lean()
       .exec();
     return { data: products, err: null };
@@ -52,16 +55,32 @@ const getProducts = async (query) => {
 
 const searchProducts = async (query) => {
   try {
-    const { searchTerm } = query;
-    const products = await ProductItem.find({
+    const { searchTerm, pinCode } = query;
+    let productQuery = {
       $or: [
         { name: { $regex: searchTerm, $options: "i" } },
         { type: { $regex: searchTerm, $options: "i" } },
         { brand: { $regex: searchTerm, $options: "i" } },
       ],
-    })
-      .lean()
-      .exec();
+      // isOutOfStock: false,
+    };
+    if (pinCode) {
+      const companyQuery = {
+        location: {
+          $near: {
+            $geometry: {
+              type: "Point",
+              coordinates: await getCoordinatesFromPin(pinCode),
+            },
+            $maxDistance: 10000, // specified in meters
+          },
+        },
+      };
+      const companies = await Company.find(companyQuery, "_id").lean().exec();
+      const companyIds = companies.map((company) => company._id);
+      productQuery.addedCompany = { $in: companyIds };
+    }
+    const products = await ProductItem.find(productQuery).lean().exec();
     return { data: products, err: null };
   } catch (err) {
     console.log("error in searching products" + err);
@@ -88,6 +107,9 @@ const updateProduct = async (req) => {
         imgUrls: urls,
         companyName: compName,
         addedCompany: compId,
+        isOutOfStock: req.body.isOutOfStock,
+        baseQuantity: req.body.baseQuantity,
+        unit: req.body.unit,
       },
       {
         new: true,

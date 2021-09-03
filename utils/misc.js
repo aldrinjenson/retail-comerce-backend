@@ -34,4 +34,6 @@ const getCoordinatesFromPin = async (pinCode) => {
   return [lng, lat];
 };
 
+// const generateQueryWithCoordinates()
+
 module.exports = { escapeRegex, sendSmsMsg, getCoordinatesFromPin };

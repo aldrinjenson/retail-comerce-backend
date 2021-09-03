@@ -13,13 +13,13 @@ const generateOtp = async (reason, phone) => {
     const otp = ("" + (Math.random() * 1000000 + 123456)).substr(0, 6);
 
     let smsReason;
-    if(reason === 'changePhone') smsReason = 'changing phone number'
-    else if(reason === 'changePassword') smsReason = 'changing password'
-    else smsReason = reason   //login
+    if (reason === "changePhone") smsReason = "changing phone number";
+    else if (reason === "changePassword") smsReason = "changing password";
+    else smsReason = reason; //login
     sendSmsMsg(
-        phone,
-        `Your otp for ${smsReason} at ${process.env.PORTAL_NAME} is ${otp}.`
-      );
+      phone,
+      `Your otp for ${smsReason} at ${process.env.PORTAL_NAME} is ${otp}.`
+    );
     await Otp.findOneAndUpdate(
       { reason, phone },
       { $set: { otp } },

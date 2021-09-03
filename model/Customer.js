@@ -9,6 +9,7 @@ const CustomerSchema = new Schema(
     tgUserId: {
       type: Number,
       required: true,
+      unique: true,
     },
     name: {
       type: String,
@@ -38,6 +39,18 @@ const CustomerSchema = new Schema(
         required: false,
       },
     },
+    cartItems: [
+      {
+        product: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "ProductItem",
+        },
+        quantity: {
+          type: Number,
+          required: true,
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

@@ -34,6 +34,7 @@ router.post("/", async (req, res) => {
       password: hashedPassword,
       pinCode,
       location,
+      deliverySlots: [],
     });
 
     const savedCompany = await company.save();
