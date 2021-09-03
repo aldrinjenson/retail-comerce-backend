@@ -14,14 +14,17 @@ async function prodToOrder() {
     const orders = await Order.find().lean().exec();
 
     for (let i = 0; i < orders.length; i++) {
-      if(!orders[i].product.addedCompany) {
-        const product = await ProductItem.findById(orders[i].product).exec()
+      if (!orders[i].product.addedCompany) {
+        const product = await ProductItem.findById(orders[i].product).exec();
         orders[i].product = product;
-        await Order.findByIdAndUpdate(orders[i]._id, {$set: {'product':product} }, { useFindAndModify:false, new: true })
-        console.log(`saved product ${product._id} to order ${orders[i]._id}`)
+        await Order.findByIdAndUpdate(
+          orders[i]._id,
+          { $set: { product: product } },
+          { useFindAndModify: false, new: true }
+        );
+        console.log(`saved product ${product._id} to order ${orders[i]._id}`);
       }
-        
-    } 
+    }
 
     console.log("done");
     process.exit();
