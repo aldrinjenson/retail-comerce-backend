@@ -22,7 +22,7 @@ const CompanySchema = new Schema(
     phoneNo: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     locality: {
       type: String,
@@ -46,7 +46,7 @@ const CompanySchema = new Schema(
     password: {
       type: String,
       required: true,
-      select:false
+      select: false,
     },
     description: {
       type: String,

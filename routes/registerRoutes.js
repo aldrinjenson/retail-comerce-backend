@@ -15,7 +15,7 @@ router.post("/", async (req, res) => {
     const hashedPassword = await bcrypt.hash(req.body.password, salt);
 
     const { pinCode } = req.body;
-    console.log(req.body)
+    console.log(req.body);
     const location = {
       type: "Point",
       coordinates: await getCoordinatesFromPin(pinCode),
