@@ -19,11 +19,11 @@ const ProductItemSchema = new Schema(
       required: true,
     },
     price: {
-      type: String,
+      type: Number,
       required: true,
     },
     discountedPrice: {
-      type: String,
+      type: Number,
       required: false,
     },
     imgUrls: {

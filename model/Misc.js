@@ -10,4 +10,15 @@ const GeoSchema = new Schema({
   },
 });
 
-module.exports = { GeoSchema };
+const CartItemSchema = new Schema({
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "ProductItem",
+  },
+  quantity: {
+    type: Number,
+    required: true,
+  },
+});
+
+module.exports = { GeoSchema, CartItemSchema };

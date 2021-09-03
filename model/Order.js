@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { GeoSchema } = require("./Misc");
+const { GeoSchema, CartItemSchema } = require("./Misc");
 const { ProductItemSchema } = require("./ProductItem");
 const { Schema } = mongoose;
 
@@ -51,6 +51,12 @@ const OrderSchema = new Schema(
     location: GeoSchema,
     totalPrice: {
       type: Number,
+      required: true,
+    },
+    products: [CartItemSchema],
+    deliverySlot: {
+      type: String,
+      required: false,
     },
   },
   { timestamps: true }

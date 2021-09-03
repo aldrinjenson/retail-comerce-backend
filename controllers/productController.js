@@ -12,8 +12,8 @@ const addProducts = async (req) => {
     const product = new ProductItem({
       name: req.body.model,
       brand: req.body.brand,
-      price: req.body.price,
-      discountedPrice: req.body.discountedPrice,
+      price: +req.body.price,
+      discountedPrice: +req.body.discountedPrice,
       type: req.body.type,
       description: req.body.description,
       imgUrls: req.body.images,
@@ -100,8 +100,8 @@ const updateProduct = async (req) => {
       {
         name: req.body.model,
         brand: req.body.brand,
-        price: req.body.price,
-        discountedPrice: req.body.discountedPrice,
+        price: +req.body.price,
+        discountedPrice: +req.body.discountedPrice,
         type: req.body.type,
         description: req.body.description,
         imgUrls: urls,

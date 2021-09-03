@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+const { CartItemSchema } = require("./Misc");
 const { Schema } = mongoose;
+
 const CustomerSchema = new Schema(
   {
     tgUserName: {
@@ -39,21 +41,10 @@ const CustomerSchema = new Schema(
         required: false,
       },
     },
-    cartItems: [
-      {
-        product: {
-          type: mongoose.Schema.Types.ObjectId,
-          ref: "ProductItem",
-        },
-        quantity: {
-          type: Number,
-          required: true,
-        },
-      },
-    ],
+    cartItems: [CartItemSchema],
   },
   { timestamps: true }
 );
 
 const Customer = mongoose.model("Customer", CustomerSchema);
-module.exports = { Customer };
+module.exports = { Customer, CartItemSchema };
