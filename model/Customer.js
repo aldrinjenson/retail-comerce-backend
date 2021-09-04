@@ -42,6 +42,10 @@ const CustomerSchema = new Schema(
       },
     },
     cartItems: [CartItemSchema],
+    pinCode: {
+      type: Number,
+      required: false,
+    },
   },
   { timestamps: true }
 );

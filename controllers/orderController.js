@@ -7,16 +7,22 @@ const addOrder = async (order) => {
   try {
     const newOrder = new Order({
       ...order,
-      product: order.product,
       status: "pending",
     });
     const savedOrder = await newOrder.save();
     const populatedOrder = await Order.populate(savedOrder, ["company"]);
 
+    const [{ product }, ...others] = order.products;
+    const othersLength = others.length;
+
     console.log("new Order saved");
     sendSmsMsg(
       populatedOrder.company.phoneNo,
-      `New order for ${populatedOrder.product.name} has been made by ${newOrder.orderedBy}.\n\nFor more details visit ${process.env.PORTAL_URL}.\n- ${process.env.BOT_NAME}`
+      `New order for ${product.brand || ""} ${product.name} ${
+        othersLength ? ` and ${othersLength} others` : ""
+      } has been made by ${newOrder.orderedBy}.\n\nFor more details visit ${
+        process.env.PORTAL_URL
+      }.\n- ${process.env.BOT_NAME}`
     );
 
     return { data: populatedOrder, err: 0 };
@@ -86,18 +92,24 @@ const updateStatus = async (params) => {
       })
       .catch((err) => console.log("err: " + err));
 
+    const [firstItem, ...others] = order.products;
+    const firstProduct = firstItem.product;
+    const othersLength = others.length;
     sendSmsMsg(
       order.orderedPhoneNo,
-      `Your order for ${order.product.brand || ""} ${order.product.name} from ${
-        order.company.name
-      } has been ${order.status}.\n- ${process.env.BOT_NAME} (t.me/${
-        process.env.BOT_TG_ID
-      })`
+      `Your order for ${firstProduct.brand || ""} ${firstProduct.name} ${
+        othersLength ? ` and ${othersLength} others` : ""
+      } from ${order.company.name} has been ${order.status}.\n- ${
+        process.env.BOT_NAME
+      } (t.me/${process.env.BOT_TG_ID})`
     );
+
     if (status === "cancelled") {
       sendSmsMsg(
         order.company.phoneNo,
-        `Order for ${order.product.brand || ""} ${order.product.name} by ${
+        `Order for ${firstProduct.brand || ""} ${firstProduct.name} ${
+          othersLength ? ` and ${othersLength} others` : ""
+        } by ${
           order.orderedBy
         } has been cancelled.\nTo know more details, visit ${
           process.env.PORTAL_URL
