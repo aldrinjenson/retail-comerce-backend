@@ -72,7 +72,7 @@ const searchProducts = async (query) => {
               type: "Point",
               coordinates: await getCoordinatesFromPin(pinCode),
             },
-            $maxDistance: 10000, // specified in meters
+            $maxDistance: 25000, // specified in meters
           },
         },
       };

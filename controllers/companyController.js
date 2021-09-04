@@ -35,7 +35,7 @@ const getCompany = async (query) => {
               type: "Point",
               coordinates,
             },
-            $maxDistance: 10000, // specified in meters
+            $maxDistance: 25000, // specified in meters
           },
         },
       };

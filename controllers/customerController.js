@@ -2,6 +2,7 @@ const { Customer } = require("../model");
 
 const addCustomer = async (customer) => {
   const { tgUserId } = customer;
+  console.log(customer);
   try {
     const existingCustomer = await Customer.findOneAndUpdate(
       { tgUserId },

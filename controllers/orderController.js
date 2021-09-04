@@ -60,7 +60,10 @@ const updateOrder = async (params) => {
     ).exec();
 
     console.log("Order updated");
-    return { data: updatedOrder, err: null };
+
+    const opts = ["customer", "company"];
+    const mainOrder = await Order.populate(updatedOrder, opts);
+    return { data: mainOrder, err: null };
   } catch (error) {
     console.log("error in getting orders" + error);
     return { err: error };
