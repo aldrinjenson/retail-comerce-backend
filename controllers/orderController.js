@@ -32,7 +32,7 @@ const getOrders = async (query) => {
       .lean()
       .sort({ createdAt: -1 })
       .exec();
-    const opts = ["customer", "company", "products.product"];
+    const opts = ["customer", "company"];
     const mainOrders = await Order.populate(orders, opts);
     return { data: mainOrders, err: null };
   } catch (error) {
