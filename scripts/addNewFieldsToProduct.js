@@ -6,7 +6,7 @@ const { ProductItem } = require("../model");
 
 const main = async () => {
   try {
-    let res = await ProductItem.find({ companyName: "Test Shop" }).exec();
+    let res = await ProductItem.find({}).exec();
     res.forEach((product) => {
       if (product.type === "Fruit") {
         ProductItem.findOneAndUpdate(

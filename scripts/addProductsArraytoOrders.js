@@ -7,7 +7,7 @@ const { Order } = require("../model");
 const main = async () => {
   try {
     const res = await Order.find({
-      company: mongoose.Types.ObjectId("612cc25c8f7ea50016b8df38"),
+      // company: mongoose.Types.ObjectId("612cc25c8f7ea50016b8df38"),
     })
       .lean()
       .exec();
@@ -17,7 +17,7 @@ const main = async () => {
       const updatedOrder = await Order.findOneAndUpdate(
         { _id: order._id },
         {
-          products: [order.product],
+          products: [{ product: order.product, quantity: 1 }],
           totalPrice: +(order.product.discountedPrice || order.product.price),
         }
       );

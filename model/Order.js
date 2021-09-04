@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { GeoSchema, CartItemSchema } = require("./Misc");
+const { GeoSchema } = require("./Misc");
 const { ProductItemSchema } = require("./ProductItem");
 const { Schema } = mongoose;
 
@@ -53,7 +53,12 @@ const OrderSchema = new Schema(
       type: Number,
       required: true,
     },
-    products: [CartItemSchema],
+    products: [
+      {
+        product: { type: ProductItemSchema, required: true },
+        quantity: { type: Number },
+      },
+    ],
     deliverySlot: {
       type: String,
       required: false,
