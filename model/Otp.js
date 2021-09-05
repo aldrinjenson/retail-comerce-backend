@@ -14,8 +14,11 @@ const OtpSchema = new Schema({
   phone: {
     type: String,
     required: true,
-  },
-});
+  }
+  }, {
+    timestamps: true
+  }
+);
 
 const Otp = mongoose.model("Otp", OtpSchema);
 module.exports = { Otp };
