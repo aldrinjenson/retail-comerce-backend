@@ -126,6 +126,8 @@ router.delete("/:name", async (req, res) => {
     await ProductItem.deleteMany({
       addedCompany: req.body.companyId,
       type: req.params.name,
+    }, {
+      useFindAndModify: false,
     });
     res.send({ success: true });
   } catch (e) {
