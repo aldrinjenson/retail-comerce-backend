@@ -24,11 +24,11 @@ const updateCompany = async (company) => {
 const getCompany = async (query) => {
   try {
     let modifiedQuery = query || {};
-    const { pinCode } = query;
+    const { pinCode, ...rest } = query;
     if (pinCode) {
       const coordinates = await getCoordinatesFromPin(pinCode);
       modifiedQuery = {
-        ...query,
+        ...rest,
         location: {
           $near: {
             $geometry: {

@@ -65,12 +65,14 @@ const searchProducts = async (query) => {
       // isOutOfStock: false,
     };
     if (pinCode) {
+      const coordinates = await getCoordinatesFromPin(pinCode);
       const companyQuery = {
+        hasProducts: true,
         location: {
           $near: {
             $geometry: {
               type: "Point",
-              coordinates: await getCoordinatesFromPin(pinCode),
+              coordinates,
             },
             $maxDistance: 25000, // specified in meters
           },
