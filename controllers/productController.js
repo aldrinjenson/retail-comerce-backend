@@ -21,7 +21,7 @@ const addProducts = async (req) => {
       companyLocation: comp.locality,
       addedCompany: compId,
       isOutOfStock: false,
-      baseQuantity: req.body.baseQuantity,
+      baseQuantity: +req.body.baseQuantity,
       unit: req.body.unit,
     });
     const p = await product.save();
