@@ -119,19 +119,19 @@ router.delete("/:name", async (req, res) => {
     return;
   }
   try {
-    await Category.findOneAndDelete({
-      company: req.body.companyId,
-      name: req.params.name,
-    },
-    {
-      useFindAndModify: false,
-    });
-    await ProductItem.deleteMany(
+    await Category.findOneAndDelete(
       {
-        addedCompany: req.body.companyId,
-        type: req.params.name,
+        company: req.body.companyId,
+        name: req.params.name,
+      },
+      {
+        useFindAndModify: false,
       }
     );
+    await ProductItem.deleteMany({
+      addedCompany: req.body.companyId,
+      type: req.params.name,
+    });
     res.send({ success: true });
   } catch (e) {
     console.log(e);
