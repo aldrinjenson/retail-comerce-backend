@@ -95,7 +95,7 @@ const updateProduct = async ({ body: product }) => {
     // const comp = await Company.findOne({ _id: compId });
     // const compName = comp["name"];
     // const urls = req.body.images;
-
+    console.log(product);
     const res = await ProductItem.findOneAndUpdate(
       { _id: product._id },
       product,
