@@ -110,7 +110,7 @@ const updateProduct = async (req) => {
         companyName: compName,
         addedCompany: compId,
         isOutOfStock: req.body.isOutOfStock,
-        baseQuantity: req.body.baseQuantity,
+        baseQuantity: +req.body.baseQuantity,
         unit: req.body.unit,
       },
       {
