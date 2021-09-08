@@ -55,14 +55,14 @@ const getProducts = async (query) => {
 
 const searchProducts = async (query) => {
   try {
-    const { searchTerm, pinCode } = query;
+    const { searchTerm, pinCode, ...rest } = query;
     let productQuery = {
       $or: [
         { name: { $regex: searchTerm, $options: "i" } },
         { type: { $regex: searchTerm, $options: "i" } },
         { brand: { $regex: searchTerm, $options: "i" } },
       ],
-      // isOutOfStock: false,
+      ...rest,
     };
     if (pinCode) {
       const coordinates = await getCoordinatesFromPin(pinCode);
