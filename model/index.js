@@ -4,5 +4,14 @@ const { Order } = require("./Order");
 const { ProductItem } = require("./ProductItem");
 const { Category } = require("./Category");
 const { Otp } = require("./Otp");
+const { Admin } = require("./Admin");
 
-module.exports = { Company, ProductItem, Customer, Order, Category, Otp };
+module.exports = {
+  Company,
+  ProductItem,
+  Customer,
+  Order,
+  Category,
+  Otp,
+  Admin,
+};
