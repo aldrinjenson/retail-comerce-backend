@@ -77,7 +77,12 @@ router.post("/phone/:oldphone", async (req, res) => {
 
 router.patch("/phone/:phone", async (req, res) => {
   const phone = req.params.phone;
-  res.send(await OtpController.generateOtp("changePhone", phone));
+  const { newPhone } = req.body;
+  if( !newPhone ) {
+    res.sendStatus(404)
+    return;
+  }
+  res.send(await OtpController.generateOtp("changePhone", phone, newPhone));
 });
 
 module.exports.otpRouter = router;

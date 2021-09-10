@@ -3,17 +3,24 @@ const bcrypt = require("bcryptjs");
 const { Otp, Company } = require("../model");
 const { sendSmsMsg } = require("../utils/misc");
 
-const generateOtp = async (reason, phone) => {
+const generateOtp = async (reason, phone, newPhone) => {
   try {
     const valid = await Company.findOne({ phoneNo: phone }).exec();
     if (!valid) return { success: false };
 
-    if (reason == "changePhone") await Otp.deleteMany({ phone }).exec();
+    if (reason == "changePhone") {
+      const invalid = await Company.findOne({ phoneNo: newPhone }).exec();
+      if(invalid) return { success: false };
+      await Otp.deleteMany({ phone }).exec();
+    }
 
     const otp = ("" + (Math.random() * 1000000 + 123456)).substr(0, 6);
 
     let smsReason;
-    if (reason === "changePhone") smsReason = "changing phone number";
+    if (reason === "changePhone") {
+      smsReason = "changing phone number";
+      phone = newPhone;
+    }
     else if (reason === "changePassword") smsReason = "changing password";
     else smsReason = reason; //login
     sendSmsMsg(
@@ -63,13 +70,13 @@ const changePhoneNumber = async (otp, oldPhone, newPhone) => {
   try {
     const valid = await Otp.findOne({
       otp,
-      phone: oldPhone,
+      phone: newPhone,
       reason: "changePhone",
     })
       .lean()
       .exec();
     if (valid) {
-      await Otp.deleteMany({ phone: oldPhone }).exec();
+      await Otp.deleteMany({$or: [ { phone:  oldPhone}, { phone: newPhone } ]}).exec();
 
       const erase_this_later = await Company.findOne({ phoneNo: newPhone });
       if (erase_this_later) throw "already exists!";

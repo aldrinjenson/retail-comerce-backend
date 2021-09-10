@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const { GeoSchema } = require("./Misc");
+const { GeoSchema, DeliveryDetailSchema, DiscountSchema } = require("./Misc");
 const { Schema } = mongoose;
 const CompanySchema = new Schema(
   {
@@ -59,6 +59,11 @@ const CompanySchema = new Schema(
     },
     location: GeoSchema,
     deliverySlots: [String],
+    deliveryDetails: [DeliveryDetailSchema],
+    maxDistance: {
+      type: Number
+    },
+    discountDetails : [DiscountSchema]
   },
   { timestamps: true }
 );
