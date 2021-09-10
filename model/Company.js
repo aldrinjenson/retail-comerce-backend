@@ -80,7 +80,7 @@ const CompanySchema = new Schema(
     ],
     discount: [
       {
-        minDistance: {
+        minAmount: {
           type: Number,
           required: true,
         },
