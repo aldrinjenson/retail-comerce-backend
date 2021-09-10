@@ -7,30 +7,31 @@ const { Company } = require("../model/Company");
 router.post("/", async (req, res) => {
   // check if username already exist in db
   try {
-    const companyUser = await Company.findOne({ username: req.body.username })
+    const company = await Company.findOne({ username: req.body.username })
       .select("+password")
       .exec();
 
-    if (!companyUser) {
+    if (!company) {
       return res.status(400).send({ success: false });
     }
 
     const validPassword = await bcrypt.compare(
       req.body.password,
-      companyUser.password
+      company.password
     );
 
     if (!validPassword) return res.status(400).send("invalid password"); // check the passfor the username
 
     const token = jwt.sign(
-      { username: companyUser.username },
+      { username: company.username },
       process.env.TOKEN_SECRET
     );
     res.send({
       success: true,
-      username: companyUser.username,
+      username: company.username,
       token: token,
-      _id: companyUser._id,
+      _id: company._id,
+      company,
     });
   } catch (e) {
     console.log(e);
