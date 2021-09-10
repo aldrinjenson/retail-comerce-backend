@@ -61,9 +61,9 @@ const CompanySchema = new Schema(
     deliverySlots: [String],
     deliveryDetails: [DeliveryDetailSchema],
     maxDistance: {
-      type: Number
+      type: Number,
     },
-    discountDetails : [DiscountSchema]
+    discountDetails: [DiscountSchema],
   },
   { timestamps: true }
 );

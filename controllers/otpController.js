@@ -10,7 +10,7 @@ const generateOtp = async (reason, phone, newPhone) => {
 
     if (reason == "changePhone") {
       const invalid = await Company.findOne({ phoneNo: newPhone }).exec();
-      if(invalid) return { success: false };
+      if (invalid) return { success: false };
       await Otp.deleteMany({ phone }).exec();
     }
 
@@ -20,8 +20,7 @@ const generateOtp = async (reason, phone, newPhone) => {
     if (reason === "changePhone") {
       smsReason = "changing phone number";
       phone = newPhone;
-    }
-    else if (reason === "changePassword") smsReason = "changing password";
+    } else if (reason === "changePassword") smsReason = "changing password";
     else smsReason = reason; //login
     sendSmsMsg(
       phone,
@@ -76,7 +75,9 @@ const changePhoneNumber = async (otp, oldPhone, newPhone) => {
       .lean()
       .exec();
     if (valid) {
-      await Otp.deleteMany({$or: [ { phone:  oldPhone}, { phone: newPhone } ]}).exec();
+      await Otp.deleteMany({
+        $or: [{ phone: oldPhone }, { phone: newPhone }],
+      }).exec();
 
       const erase_this_later = await Company.findOne({ phoneNo: newPhone });
       if (erase_this_later) throw "already exists!";

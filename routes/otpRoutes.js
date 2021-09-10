@@ -78,8 +78,8 @@ router.post("/phone/:oldphone", async (req, res) => {
 router.patch("/phone/:phone", async (req, res) => {
   const phone = req.params.phone;
   const { newPhone } = req.body;
-  if( !newPhone ) {
-    res.sendStatus(404)
+  if (!newPhone) {
+    res.sendStatus(404);
     return;
   }
   res.send(await OtpController.generateOtp("changePhone", phone, newPhone));

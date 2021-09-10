@@ -23,33 +23,38 @@ const CartItemSchema = new Schema({
 
 const DeliveryDetailSchema = new Schema({
   startTime: {
-    type:String,
-    required: true
+    type: String,
+    required: true,
   },
   endTime: {
     type: String,
-    required: true
+    required: true,
   },
   price: {
     type: Number,
-    required: true
-  }
+    required: true,
+  },
 });
 
 const DiscountSchema = new Schema({
   minDistance: {
-    type:Number,
-    required: true
+    type: Number,
+    required: true,
   },
   Dtype: {
     type: String,
     required: true,
-    enum:["$", "%"]
+    enum: ["$", "%"],
   },
   value: {
     type: Number,
-    required:true
-  }
-})
+    required: true,
+  },
+});
 
-module.exports = { GeoSchema, CartItemSchema, DeliveryDetailSchema, DiscountSchema };
+module.exports = {
+  GeoSchema,
+  CartItemSchema,
+  DeliveryDetailSchema,
+  DiscountSchema,
+};
