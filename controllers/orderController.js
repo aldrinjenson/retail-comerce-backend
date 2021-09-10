@@ -1,6 +1,6 @@
-// eslint-disable-next-line no-unused-vars
 const axios = require("axios");
 const { Order } = require("../model");
+const { AdminService } = require("../services/adminService");
 const { sendSmsMsg } = require("../utils/misc");
 
 const addOrder = async (order) => {
@@ -24,6 +24,7 @@ const addOrder = async (order) => {
         process.env.PORTAL_URL
       }.\n- ${process.env.BOT_NAME}`
     );
+    AdminService.notifyAdminOnOrder(order, "ORDER_CREATED");
 
     return { data: populatedOrder, err: 0 };
   } catch (error) {
@@ -69,6 +70,7 @@ const updateOrder = async (params) => {
     return { err: error };
   }
 };
+
 const updateStatus = async (params) => {
   const { _id, status } = params;
   try {
@@ -118,6 +120,7 @@ const updateStatus = async (params) => {
           process.env.PORTAL_URL
         }\n- ${process.env.BOT_NAME}`
       );
+      AdminService.notifyAdminOnOrder(order, "ORDER_CANCELLED");
     }
 
     return { data: newOrder, err: null };

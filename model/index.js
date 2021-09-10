@@ -5,6 +5,7 @@ const { ProductItem } = require("./ProductItem");
 const { Category } = require("./Category");
 const { Otp } = require("./Otp");
 const { Admin } = require("./Admin");
+const { TgUser } = require("./TgUser");
 
 module.exports = {
   Company,
@@ -14,4 +15,5 @@ module.exports = {
   Category,
   Otp,
   Admin,
+  TgUser,
 };

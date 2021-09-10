@@ -2,23 +2,15 @@
 // not run in production
 require("dotenv").config();
 const mongoose = require("mongoose");
-const { ProductItem } = require("../model");
+const { Order } = require("../../model");
 
 const main = async () => {
   try {
-    // let res = await Company.find({}).exec();
-    const res = await ProductItem.updateMany(
-      { isOutOfStock: null },
-      { isOutOfStock: false },
-      {
-        new: true,
-        useFindAndModify: false,
-        multi: true,
-      }
-    ).exec();
-    console.log(res);
-
-    // console.log("Total = " + res.n, "Modified = " + res.nM);
+    const updatedOrders = await Order.updateMany(
+      {},
+      { $unset: { product: "" } }
+    );
+    console.log(updatedOrders);
   } catch (error) {
     console.log(error);
   }
