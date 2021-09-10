@@ -14,10 +14,6 @@ const OrderSchema = new Schema(
       required: true,
       ref: "Customer",
     },
-    product: {
-      type: ProductItemSchema,
-      required: true,
-    },
     company: {
       type: mongoose.Schema.Types.ObjectId,
       required: true,

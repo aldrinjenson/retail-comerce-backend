@@ -13,6 +13,10 @@ const CustomerSchema = new Schema(
       required: true,
       unique: true,
     },
+    tgFullName: {
+      type: String,
+      required: false,
+    },
     name: {
       type: String,
       required: true,
@@ -24,10 +28,6 @@ const CustomerSchema = new Schema(
     phoneNumber: {
       type: String,
       required: true,
-    },
-    tgFullName: {
-      type: String,
-      required: false,
     },
     email: {
       type: String,
@@ -46,9 +46,13 @@ const CustomerSchema = new Schema(
       type: Number,
       required: false,
     },
+    tgDetails: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "TgUser",
+    },
   },
   { timestamps: true }
 );
 
 const Customer = mongoose.model("Customer", CustomerSchema);
-module.exports = { Customer, CartItemSchema };
+module.exports = { Customer };

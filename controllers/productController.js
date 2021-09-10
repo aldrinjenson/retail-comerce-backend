@@ -91,28 +91,9 @@ const searchProducts = async (query) => {
 
 const updateProduct = async ({ body: product }) => {
   try {
-    // const compId = req.body.companyId;
-    // const comp = await Company.findOne({ _id: compId });
-    // const compName = comp["name"];
-    // const urls = req.body.images;
-    console.log(product);
     const res = await ProductItem.findOneAndUpdate(
       { _id: product._id },
       product,
-      // {
-      //   name: req.body.model,
-      //   imgUrls: urls,
-      //   addedCompany: compId,
-      //   brand: req.body.brand,
-      //   price: +req.body.price,
-      //   discountedPrice: +req.body.discountedPrice,
-      //   type: req.body.type,
-      //   description: req.body.description,
-      //   companyName: compName,
-      //   isOutOfStock: req.body.isOutOfStock,
-      //   baseQuantity: +req.body.baseQuantity,
-      //   unit: req.body.unit,
-      // },
       {
         new: true,
         useFindAndModify: false,

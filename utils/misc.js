@@ -1,10 +1,6 @@
 const fast2sms = require("fast-two-sms");
 const axios = require("axios");
 
-const escapeRegex = (text) => {
-  return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
-};
-
 const sendSmsMsg = async (number, msgText) => {
   const options = {
     authorization: process.env.FAST2SMS_API_KEY,
@@ -34,6 +30,4 @@ const getCoordinatesFromPin = async (pinCode) => {
   return [lng, lat];
 };
 
-// const generateQueryWithCoordinates()
-
-module.exports = { escapeRegex, sendSmsMsg, getCoordinatesFromPin };
+module.exports = { sendSmsMsg, getCoordinatesFromPin };
