@@ -18,10 +18,9 @@ const addProducts = async (req) => {
       description: req.body.description,
       imgUrls: req.body.images,
       companyName: comp.name,
-      companyLocation: comp.locality,
       addedCompany: compId,
       isOutOfStock: false,
-      baseQuantity: req.body.baseQuantity,
+      baseQuantity: +req.body.baseQuantity,
       unit: req.body.unit,
     });
     const p = await product.save();
@@ -55,22 +54,24 @@ const getProducts = async (query) => {
 
 const searchProducts = async (query) => {
   try {
-    const { searchTerm, pinCode } = query;
+    const { searchTerm, pinCode, ...rest } = query;
     let productQuery = {
       $or: [
         { name: { $regex: searchTerm, $options: "i" } },
         { type: { $regex: searchTerm, $options: "i" } },
         { brand: { $regex: searchTerm, $options: "i" } },
       ],
-      // isOutOfStock: false,
+      ...rest,
     };
     if (pinCode) {
+      const coordinates = await getCoordinatesFromPin(pinCode);
       const companyQuery = {
+        hasProducts: true,
         location: {
           $near: {
             $geometry: {
               type: "Point",
-              coordinates: await getCoordinatesFromPin(pinCode),
+              coordinates,
             },
             $maxDistance: 25000, // specified in meters
           },
@@ -88,29 +89,30 @@ const searchProducts = async (query) => {
   }
 };
 
-const updateProduct = async (req) => {
+const updateProduct = async ({ body: product }) => {
   try {
-    const compId = req.body.companyId;
-    const comp = await Company.findOne({ _id: compId });
-    const compName = comp["name"];
-    const urls = req.body.images;
-
+    // const compId = req.body.companyId;
+    // const comp = await Company.findOne({ _id: compId });
+    // const compName = comp["name"];
+    // const urls = req.body.images;
+    console.log(product);
     const res = await ProductItem.findOneAndUpdate(
-      { _id: req.body.id },
-      {
-        name: req.body.model,
-        brand: req.body.brand,
-        price: +req.body.price,
-        discountedPrice: +req.body.discountedPrice,
-        type: req.body.type,
-        description: req.body.description,
-        imgUrls: urls,
-        companyName: compName,
-        addedCompany: compId,
-        isOutOfStock: req.body.isOutOfStock,
-        baseQuantity: req.body.baseQuantity,
-        unit: req.body.unit,
-      },
+      { _id: product._id },
+      product,
+      // {
+      //   name: req.body.model,
+      //   imgUrls: urls,
+      //   addedCompany: compId,
+      //   brand: req.body.brand,
+      //   price: +req.body.price,
+      //   discountedPrice: +req.body.discountedPrice,
+      //   type: req.body.type,
+      //   description: req.body.description,
+      //   companyName: compName,
+      //   isOutOfStock: req.body.isOutOfStock,
+      //   baseQuantity: +req.body.baseQuantity,
+      //   unit: req.body.unit,
+      // },
       {
         new: true,
         useFindAndModify: false,
