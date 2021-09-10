@@ -1,5 +1,6 @@
 const axios = require("axios");
 const { Order } = require("../model");
+const { SellerService } = require("../services");
 const { AdminService } = require("../services/adminService");
 const { sendSmsMsg } = require("../utils/misc");
 
@@ -25,6 +26,7 @@ const addOrder = async (order) => {
       }.\n- ${process.env.BOT_NAME}`
     );
     AdminService.notifyAdminOnOrder(order, "ORDER_CREATED");
+    SellerService.notifysellerOnOrder(order, "ORDER_CREATED");
 
     return { data: populatedOrder, err: 0 };
   } catch (error) {
@@ -121,6 +123,7 @@ const updateStatus = async (params) => {
         }\n- ${process.env.BOT_NAME}`
       );
       AdminService.notifyAdminOnOrder(order, "ORDER_CANCELLED");
+      SellerService.notifysellerOnOrder(order, "ORDER_CANCELLED");
     }
 
     return { data: newOrder, err: null };

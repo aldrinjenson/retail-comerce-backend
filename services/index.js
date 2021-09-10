@@ -1,3 +1,4 @@
 const { AdminService } = require("./adminService");
+const { SellerService } = require("./sellerService");
 
-module.exports = { AdminService };
+module.exports = { AdminService, SellerService };

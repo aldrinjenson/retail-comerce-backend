@@ -4,7 +4,7 @@ const router = express.Router();
 
 router.get("/", async (req, res) => {
   const { body: query } = req;
-  res.send(await TgUserContorller.addTgUser(query));
+  res.send(await TgUserContorller.getTgUser(query));
 });
 
 router.patch("/", async (req, res) => {

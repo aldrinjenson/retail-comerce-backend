@@ -10,9 +10,9 @@ const notifysellerOnOrder = async (order, type) => {
       .select("tgUserId")
       .lean()
       .exec();
-    const botBroadcastUrl = `${process.env.seller_BOT_BASE_URL}/notify`;
+    const sellerBotNotifyUrl = `${process.env.SELLER_BOT_BASE_URL}/notify`;
     axios
-      .post(botBroadcastUrl, {
+      .post(sellerBotNotifyUrl, {
         payload: { order, sellers },
         type,
       })
@@ -22,4 +22,4 @@ const notifysellerOnOrder = async (order, type) => {
   }
 };
 
-module.exports.sellerService = { notifysellerOnOrder };
+module.exports.SellerService = { notifysellerOnOrder };
