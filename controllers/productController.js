@@ -1,9 +1,7 @@
-// const express = require("express");
-// const router = express.Router();
 const { ProductItem } = require("../model");
 const { Category } = require("../model/Category");
 const { Company } = require("../model/Company");
-const { getCoordinatesFromPin } = require("../utils/misc");
+const { CompanyController } = require("./companyController");
 
 const addProducts = async (req) => {
   try {
@@ -64,20 +62,9 @@ const searchProducts = async (query) => {
       ...rest,
     };
     if (pinCode) {
-      const coordinates = await getCoordinatesFromPin(pinCode);
-      const companyQuery = {
-        hasProducts: true,
-        location: {
-          $near: {
-            $geometry: {
-              type: "Point",
-              coordinates,
-            },
-            $maxDistance: 25000, // specified in meters
-          },
-        },
-      };
-      const companies = await Company.find(companyQuery, "_id").lean().exec();
+      const companies = (
+        await CompanyController.getCompaniesFromPinCode({ pinCode })
+      ).data;
       const companyIds = companies.map((company) => company._id);
       productQuery.addedCompany = { $in: companyIds };
     }
@@ -108,6 +95,7 @@ const updateProduct = async ({ body: product }) => {
   }
 };
 
+// set hasProducts=false in company when all products has been deleted!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 const deleteProduct = async (req) => {
   try {
     const res = await ProductItem.findOneAndDelete({ _id: req.body.id });

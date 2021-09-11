@@ -7,6 +7,11 @@ router.get("/", async (req, res) => {
   res.send(await CompanyController.getCompany(query));
 });
 
+router.get("/pin", async (req, res) => {
+  const { query } = req;
+  res.send(await CompanyController.getCompaniesFromPinCode(query));
+});
+
 router.patch("/", async (req, res) => {
   const { company } = req.body;
   res.send(await CompanyController.updateCompany(company));
