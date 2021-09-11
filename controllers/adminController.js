@@ -1,6 +1,16 @@
 const axios = require("axios");
 const { Admin, TgUser } = require("../model");
 
+const getAdmin = async (query = {}) => {
+  try {
+    const admins = await Admin.find(query).lean().exec();
+    return { data: admins, err: 0 };
+  } catch (error) {
+    console.log("Error in saving admin: " + error);
+    return { data: "error", err: 1 };
+  }
+};
+
 const addAdmin = async (admin) => {
   try {
     const newAdmin = new Admin(admin);
@@ -29,4 +39,4 @@ const broadcastToTgUsers = async (payload) => {
   }
 };
 
-module.exports.AdminController = { addAdmin, broadcastToTgUsers };
+module.exports.AdminController = { addAdmin, broadcastToTgUsers, getAdmin };
