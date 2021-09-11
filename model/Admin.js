@@ -14,6 +14,7 @@ const AdminSchema = new Schema(
     tgUserId: {
       type: Number,
       required: true,
+      unique: true,
     },
     industry: [
       {
