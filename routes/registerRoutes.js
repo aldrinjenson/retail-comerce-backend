@@ -35,6 +35,9 @@ router.post("/", async (req, res) => {
       pinCode,
       location,
       deliverySlots: [],
+      deliveryRadius: 25,
+      deliveryRates: [],
+      discount: [],
     });
 
     const savedCompany = await company.save();

@@ -59,6 +59,17 @@ const OrderSchema = new Schema(
       type: String,
       required: false,
     },
+    deliveryCharge: {
+      type: Number,
+      default: 0,
+    },
+    discountAvailable: {
+      type: Number,
+      default: 0,
+    },
+    subTotalPrice: {
+      type: Number,
+    },
   },
   { timestamps: true }
 );

@@ -65,11 +65,11 @@ const CompanySchema = new Schema(
     deliveryRates: [
       {
         minDistance: {
-          type: String,
+          type: Number,
           required: true,
         },
         maxDistance: {
-          type: String,
+          type: Number,
           required: true,
         },
         price: {
