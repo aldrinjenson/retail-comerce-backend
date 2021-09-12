@@ -21,13 +21,18 @@ const sendSmsMsg = async (number, msgText) => {
 };
 
 const getCoordinatesFromPin = async (pinCode) => {
-  const [geoData] = (
-    await axios.get(
-      `https://maps.googleapis.com/maps/api/geocode/json?&address=${pinCode}&key=${process.env.G_MAPS_API_KEY}`
-    )
-  ).data.results;
-  const { lat, lng } = geoData.geometry.location;
-  return [lng, lat];
+  try {
+    const [geoData] = (
+      await axios.get(
+        `https://maps.googleapis.com/maps/api/geocode/json?&address=${pinCode}&key=${process.env.G_MAPS_API_KEY}`
+      )
+    ).data.results;
+    const { lat, lng } = geoData.geometry.location;
+    return [lng, lat];
+  } catch (err) {
+    console.log(`Error in getting coordinates from pinCode ${pinCode}: ` + err);
+    return [];
+  }
 };
 
 const distanceInKmBetweenEarthCoordinates = (lat1, lon1, lat2, lon2) => {

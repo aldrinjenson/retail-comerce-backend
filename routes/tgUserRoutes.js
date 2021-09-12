@@ -3,7 +3,7 @@ const { TgUserContorller } = require("../controllers");
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  const { body: query } = req;
+  const { query } = req;
   res.send(await TgUserContorller.getTgUser(query));
 });
 
