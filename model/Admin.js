@@ -16,12 +16,10 @@ const AdminSchema = new Schema(
       required: true,
       unique: true,
     },
-    industry: [
-      {
-        type: String,
-        default: "fruit",
-      },
-    ],
+    industry: {
+      type: Array,
+      default: ["fruit"],
+    },
   },
   { timestamps: true }
 );
