@@ -25,8 +25,8 @@ const addOrder = async (order) => {
         process.env.PORTAL_URL
       }.\n- ${process.env.BOT_NAME}`
     );
-    AdminService.notifyAdminOnOrder(order, "ORDER_CREATED");
-    SellerService.notifysellerOnOrder(order, "ORDER_CREATED");
+    AdminService.notifyAdminOnOrder(populatedOrder, "ORDER_CREATED");
+    SellerService.notifysellerOnOrder(populatedOrder, "ORDER_CREATED");
 
     return { data: populatedOrder, err: 0 };
   } catch (error) {
@@ -112,6 +112,7 @@ const updateStatus = async (params) => {
     );
 
     if (status === "cancelled") {
+      const populatedOrder = await Order.populate(newOrder, ["company"]);
       sendSmsMsg(
         order.company.phoneNo,
         `Order for ${firstProduct.brand || ""} ${firstProduct.name} ${
@@ -122,8 +123,8 @@ const updateStatus = async (params) => {
           process.env.PORTAL_URL
         }\n- ${process.env.BOT_NAME}`
       );
-      AdminService.notifyAdminOnOrder(order, "ORDER_CANCELLED");
-      SellerService.notifysellerOnOrder(order, "ORDER_CANCELLED");
+      AdminService.notifyAdminOnOrder(populatedOrder, "ORDER_CANCELLED");
+      SellerService.notifysellerOnOrder(populatedOrder, "ORDER_CANCELLED");
     }
 
     return { data: newOrder, err: null };
