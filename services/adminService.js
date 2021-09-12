@@ -10,7 +10,8 @@ const notifyAdminOnOrder = async (order, type, query = {}) => {
         payload: { order, admins },
         type,
       })
-      .then(() => console.log("Notified admins"));
+      .then(() => console.log("Notified admins"))
+      .catch((err) => console.log("no response from admin bot: " + err));
   } catch (err) {
     console.log("Error in notifying admin" + err);
   }

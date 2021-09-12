@@ -16,7 +16,8 @@ const notifysellerOnOrder = async (order, type) => {
         payload: { order, sellers },
         type,
       })
-      .then(() => console.log("Notified sellers"));
+      .then(() => console.log("Notified sellers"))
+      .catch((err) => console.log("no response from seller bot: " + err));
   } catch (err) {
     console.log("Error in notifying seller" + err);
   }
